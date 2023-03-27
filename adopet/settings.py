@@ -3,20 +3,18 @@ from pathlib import Path
 import dj_database_url
 from decouple import Csv, config
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', cast=bool, default=False)
+DEBUG = config("DEBUG", cast=bool, default=False)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
-AUTH_USER_MODEL = 'core.CustomUser'
+AUTH_USER_MODEL = "core.CustomUser"
 
 # Application definition
 
@@ -64,15 +62,13 @@ WSGI_APPLICATION = "adopet.wsgi.application"
 
 
 # Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-default_db_url = 'sqlite:///' + str(BASE_DIR / 'db.sqlite3')
+default_db_url = "sqlite:///" + str(BASE_DIR / "db.sqlite3")
 parse_db = dj_database_url.parse
-DATABASES = {'default': config('DATABASE_URL', default=default_db_url, cast=parse_db)}
+DATABASES = {"default": config("DATABASE_URL", default=default_db_url, cast=parse_db)}
 
 
 # Password validation
-# https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -91,7 +87,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/4.1/topics/i18n/
 
 LANGUAGE_CODE = "pt-br"
 
@@ -103,12 +98,10 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles/'
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles/"
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

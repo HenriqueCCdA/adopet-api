@@ -137,3 +137,5 @@ pgdata
 db
 
 *-workspace
+
+test-result.xml
