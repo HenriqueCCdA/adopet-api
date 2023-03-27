@@ -1,0 +1,27 @@
+# pyproject.toml
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "adopet.settings"
+addopts = "-vv"
+testpaths = [
+    "adopet",
+]
+
+[tool.flake8]
+exclude = [".venv"]
+max-line-length = 120
+
+
+[tool.black]
+line-length = 120
+exclude = '''
+/(
+      \.eggs
+    | \.git
+    | \.venv
+)/
+'''
+
+[tool.isort]
+profile = "black"
+src_paths = ["adopet"]
+multi_line_output = 3

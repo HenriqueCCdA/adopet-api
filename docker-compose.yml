@@ -1,0 +1,35 @@
+services:
+
+  app:
+    container_name: adopet_api_app
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+    image: django_xml:0.1.0
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: 'no'
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgres://xml_user:123456@database:5432/xml_user
+    ports:
+      - 8000:8000
+    depends_on:
+      - database
+
+  database:
+    container_name: adopet_api_db
+    image: postgres:15.1
+    restart: 'no'
+    volumes:
+      - pg_datebase:/var/lib/postgresql/data
+    environment:
+      - LC_ALL=C.UTF-8
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_USER=adopet_user
+    ports:
+      - 5432:5432
+
+
+volumes:
+  pg_datebase:
