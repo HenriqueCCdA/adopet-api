@@ -2,10 +2,16 @@ import pytest
 from django.contrib.auth import get_user_model
 from faker import Faker
 from model_bakery import baker
+from rest_framework.test import APIClient
 
 fake = Faker()
 
 User = get_user_model()
+
+
+@pytest.fixture
+def client_api():
+    return APIClient()
 
 
 @pytest.fixture

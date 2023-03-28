@@ -2,21 +2,19 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.shortcuts import resolve_url
 from rest_framework import status
-from rest_framework.test import APIClient
 
 pytestmark = pytest.mark.django_db
 
 User = get_user_model()
 
-client = APIClient()
 
-URL = "core:tutors"
+URL = "core:list-tutor"
 
 
-def test_positive_list(users):
+def test_positive_list(client_api, users):
     url = resolve_url(URL)
 
-    resp = client.get(url)
+    resp = client_api.get(url)
 
     assert resp.status_code == status.HTTP_200_OK
 
@@ -36,10 +34,10 @@ def test_positive_list(users):
         assert r["modified_at"] == str(db.modified_at.astimezone().isoformat())
 
 
-def test_positive_pagination(users):
+def test_positive_pagination(client_api, users):
     url = resolve_url(URL)
 
-    resp = client.get(f"{url}?page=2&page_size=2")
+    resp = client_api.get(f"{url}?page=2&page_size=2")
 
     assert resp.status_code == status.HTTP_200_OK
 
@@ -59,10 +57,10 @@ def test_positive_pagination(users):
         assert r["modified_at"] == str(db.modified_at.astimezone().isoformat())
 
 
-def test_negative_invalid_page_pagination(users):
+def test_negative_invalid_page_pagination(client_api, users):
     url = resolve_url(URL)
 
-    resp = client.get(f"{url}?page=5")
+    resp = client_api.get(f"{url}?page=5")
 
     assert resp.status_code == status.HTTP_404_NOT_FOUND
 
