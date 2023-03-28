@@ -1,0 +1,26 @@
+import pytest
+from django.contrib.auth import get_user_model
+from faker import Faker
+from model_bakery import baker
+
+fake = Faker()
+
+User = get_user_model()
+
+
+@pytest.fixture
+def user(db):
+    return baker.make(User)
+
+
+@pytest.fixture
+def superuser(db):
+    return User.objects.create_superuser(email=fake.email(), password=fake.password())
+
+
+@pytest.fixture()
+def users(superuser):
+    baker.make(User, _quantity=5, is_tutor=True)
+    baker.make(User, _quantity=5, is_tutor=True, is_active=False)
+
+    return User.objects.all()

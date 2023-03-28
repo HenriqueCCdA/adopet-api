@@ -52,6 +52,7 @@ class CustomUser(CreationModificationBase, AbstractBaseUser, PermissionsMixin):
 
     name = models.CharField("Nome completo", max_length=120)
     email = models.EmailField("Email", unique=True)
+
     is_staff = models.BooleanField("staff status", default=False)
     is_active = models.BooleanField("Ativo", default=True)
 
@@ -67,6 +68,7 @@ class CustomUser(CreationModificationBase, AbstractBaseUser, PermissionsMixin):
         verbose_name = _("user")
         verbose_name_plural = _("users")
         abstract = False
+        ordering = ("-created_at",)
 
     def clean(self):
         super().clean()

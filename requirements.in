@@ -1,4 +1,5 @@
 django
+djangorestframework
 python-decouple
 gunicorn
 dj_database_url
