@@ -1,16 +1,8 @@
 from datetime import datetime
 
-import pytest
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
-
-pytestmark = pytest.mark.django_db
-
-
-@pytest.fixture
-def user():
-    return User.objects.create_user(email="teste@email.com", password="123456")
 
 
 def test_positive_create_user(user):
@@ -18,11 +10,10 @@ def test_positive_create_user(user):
     assert User.objects.exists()
 
 
-def test_positive_create_superuser():
-    user = User.objects.create_superuser(email="teste@email.com", password="123456")
-    assert user.is_staff
-    assert user.is_superuser
-    assert not user.is_tutor
+def test_positive_create_superuser(superuser):
+    assert superuser.is_staff
+    assert superuser.is_superuser
+    assert not superuser.is_tutor
 
 
 def test_positive_default(user):

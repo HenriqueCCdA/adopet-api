@@ -9,3 +9,5 @@ pyproject-flake8
 ipython
 ipdb
 pre-commit
+model_bakery
+faker
