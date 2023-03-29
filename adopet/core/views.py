@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import status
-from rest_framework.generics import ListAPIView, RetrieveDestroyAPIView
+from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 
 from adopet.core.paginators import MyPagination
@@ -15,7 +15,7 @@ class TutorList(ListAPIView):
     pagination_class = MyPagination
 
 
-class TutorDetailDelete(RetrieveDestroyAPIView):
+class TutorRDU(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.filter(is_tutor=True, is_active=True)
     serializer_class = TutorListSerializer
 
@@ -27,3 +27,6 @@ class TutorDetailDelete(RetrieveDestroyAPIView):
     def perform_destroy(self, instance):
         instance.is_active = False
         instance.save()
+
+    def put(self, request, *args, **kwargs):
+        return Response({"detail": 'Method "PUT" not allowed.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)

@@ -8,7 +8,7 @@ pytestmark = pytest.mark.django_db
 User = get_user_model()
 
 
-URL = "core:detail-tutor"
+URL = "core:read-delete-update-tutor"
 
 
 def test_positive_get_by_id(client_api, users):
