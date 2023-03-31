@@ -30,3 +30,15 @@ def users(superuser):
     baker.make(User, _quantity=5, is_tutor=True, is_active=False)
 
     return User.objects.all()
+
+
+@pytest.fixture
+def create_tutor_payload():
+    password = fake.password()
+
+    return {
+        "name": fake.name(),
+        "email": fake.email(),
+        "password": password,
+        "password2": password,
+    }
