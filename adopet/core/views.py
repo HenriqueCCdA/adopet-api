@@ -1,23 +1,23 @@
 from django.contrib.auth import get_user_model
 from rest_framework import status
-from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 
 from adopet.core.paginators import MyPagination
-from adopet.core.serializers import TutorListSerializer
+from adopet.core.serializers import TutorSerializer
 
 User = get_user_model()
 
 
-class TutorList(ListAPIView):
+class TutorLC(ListCreateAPIView):
     queryset = User.objects.filter(is_tutor=True, is_active=True)
-    serializer_class = TutorListSerializer
+    serializer_class = TutorSerializer
     pagination_class = MyPagination
 
 
 class TutorRDU(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.filter(is_tutor=True, is_active=True)
-    serializer_class = TutorListSerializer
+    serializer_class = TutorSerializer
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
