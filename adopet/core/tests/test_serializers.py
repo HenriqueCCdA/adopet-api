@@ -1,4 +1,5 @@
 import pytest
+from django.test import RequestFactory
 
 from adopet.core.models import CustomUser as User
 from adopet.core.serializers import TutorSerializer
@@ -7,9 +8,11 @@ pytestmark = pytest.mark.django_db
 
 
 def test_positive_serialization_objs_list(users):
-    serialize = TutorSerializer(instance=User.objects.all(), many=True)
+    request = RequestFactory().request()
 
-    for data, db in zip(serialize.data, users):
+    serializer = TutorSerializer(instance=User.objects.all(), many=True, context={"request": request})
+
+    for data, db in zip(serializer.data, users):
         assert data["id"] == db.id
         assert data["name"] == db.name
         assert data["email"] == db.email
@@ -23,9 +26,11 @@ def test_positive_serialization_objs_list(users):
 def test_positive_serialization_one_obj(users):
     tutor = users[2]
 
-    serialize = TutorSerializer(instance=tutor)
+    request = RequestFactory().request()
 
-    data = serialize.data
+    serializer = TutorSerializer(instance=tutor, context={"request": request})
+
+    data = serializer.data
 
     assert data["id"] == tutor.id
     assert data["name"] == tutor.name
@@ -35,30 +40,31 @@ def test_positive_serialization_one_obj(users):
     assert data["is_active"] == tutor.is_active
     assert data["created_at"] == str(tutor.created_at.astimezone().isoformat())
     assert data["modified_at"] == str(tutor.modified_at.astimezone().isoformat())
+    assert data["url"] == "http://testserver/tutores/121/"
 
 
 def test_positive_metadata_fields():
-    serialize = TutorSerializer()
+    serializer = TutorSerializer()
 
-    assert serialize.fields["name"].max_length == 120
-    assert serialize.fields["email"].max_length == 254
+    assert serializer.fields["name"].max_length == 120
+    assert serializer.fields["email"].max_length == 254
 
-    assert serialize.fields["password"].max_length == 128
-    assert serialize.fields["password"].write_only
+    assert serializer.fields["password"].max_length == 128
+    assert serializer.fields["password"].write_only
 
-    assert serialize.fields["password2"].max_length == 128
-    assert serialize.fields["password2"].write_only
+    assert serializer.fields["password2"].max_length == 128
+    assert serializer.fields["password2"].write_only
 
-    assert serialize.fields["created_at"].read_only
-    assert serialize.fields["modified_at"].read_only
+    assert serializer.fields["created_at"].read_only
+    assert serializer.fields["modified_at"].read_only
 
 
 def test_positive_create_user(create_tutor_payload):
-    serialize = TutorSerializer(data=create_tutor_payload)
+    serializer = TutorSerializer(data=create_tutor_payload)
 
-    assert serialize.is_valid()
+    assert serializer.is_valid()
 
-    tutor = serialize.save()
+    tutor = serializer.save()
 
     assert User.objects.exists()
 
@@ -68,11 +74,11 @@ def test_positive_create_user(create_tutor_payload):
 def test_negative_password2_must_be_equal_password(create_tutor_payload):
     create_tutor_payload["password2"] = create_tutor_payload["password"] + "!!"
 
-    serialize = TutorSerializer(data=create_tutor_payload)
+    serializer = TutorSerializer(data=create_tutor_payload)
 
-    assert not serialize.is_valid()
+    assert not serializer.is_valid()
 
-    assert serialize.errors["non_field_errors"] == ["Password não são iguais."]
+    assert serializer.errors["non_field_errors"] == ["Password não são iguais."]
 
 
 @pytest.mark.parametrize(
@@ -96,11 +102,11 @@ def test_negative_password_validation(password, errors, create_tutor_payload):
     data["password"] = password
     data["password2"] = password
 
-    serialize = TutorSerializer(data=data)
+    serializer = TutorSerializer(data=data)
 
-    assert not serialize.is_valid()
+    assert not serializer.is_valid()
 
-    assert serialize.errors["password"] == errors
+    assert serializer.errors["password"] == errors
 
 
 @pytest.mark.parametrize(
@@ -117,8 +123,8 @@ def test_negative_missing_fields(field, errors, create_tutor_payload):
 
     del data[field]
 
-    serialize = TutorSerializer(data=data)
+    serializer = TutorSerializer(data=data)
 
-    assert not serialize.is_valid()
+    assert not serializer.is_valid()
 
-    assert serialize.errors[field] == errors
+    assert serializer.errors[field] == errors

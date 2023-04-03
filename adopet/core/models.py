@@ -51,3 +51,6 @@ class CustomUser(CreationModificationBase, AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+    def get_absolute_url(self):
+        return f"tutor/{self.pk}/"
