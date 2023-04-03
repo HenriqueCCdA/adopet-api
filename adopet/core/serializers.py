@@ -5,7 +5,8 @@ from adopet.core.models import CustomUser as User
 
 
 class TutorSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(label="Senha de confimação", max_length=128, write_only=True)
+    password2 = serializers.CharField(label="Senha de confirmação", max_length=128, write_only=True)
+    url = serializers.HyperlinkedIdentityField(view_name="core:read-delete-update-tutor", read_only=True)
 
     class Meta:
         model = User
@@ -16,6 +17,7 @@ class TutorSerializer(serializers.ModelSerializer):
             "is_active",
             "password",
             "password2",
+            "url",
             "created_at",
             "modified_at",
         )

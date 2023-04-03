@@ -28,6 +28,8 @@ def test_positive(client_api, create_tutor_payload):
     assert body["created_at"] == str(tutor.created_at.astimezone().isoformat())
     assert body["modified_at"] == str(tutor.modified_at.astimezone().isoformat())
 
+    assert resp["Location"] == "http://testserver/tutores/1/"
+
     assert tutor.check_password(create_tutor_payload["password"])
 
 
