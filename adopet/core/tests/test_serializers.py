@@ -40,7 +40,7 @@ def test_positive_serialization_one_obj(users):
     assert data["is_active"] == tutor.is_active
     assert data["created_at"] == str(tutor.created_at.astimezone().isoformat())
     assert data["modified_at"] == str(tutor.modified_at.astimezone().isoformat())
-    assert data["url"] == "http://testserver/tutores/121/"
+    assert data["url"] == f"http://testserver/tutores/{tutor.id}/"
 
 
 def test_positive_metadata_fields():

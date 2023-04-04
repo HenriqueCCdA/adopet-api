@@ -28,6 +28,8 @@ def superuser(db):
 def users(superuser):
     baker.make(User, _quantity=5, is_tutor=True)
     baker.make(User, _quantity=5, is_tutor=True, is_active=False)
+    baker.make(User, _quantity=6, is_shelter=True)
+    baker.make(User, _quantity=7, is_shelter=True, is_active=False)
 
     return User.objects.all()
 

@@ -4,19 +4,19 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.response import Response
 
 from adopet.core.paginators import MyPagination
-from adopet.core.serializers import TutorSerializer
+from adopet.core.serializers import AbrigoSerializer, TutorSerializer
 
 User = get_user_model()
 
 
 class TutorLC(ListCreateAPIView):
-    queryset = User.objects.filter(is_tutor=True, is_active=True)
+    queryset = User.objects.filter(is_tutor=True, is_shelter=False, is_active=True)
     serializer_class = TutorSerializer
     pagination_class = MyPagination
 
 
 class TutorRDU(RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.filter(is_tutor=True, is_active=True)
+    queryset = User.objects.filter(is_tutor=True, is_shelter=False, is_active=True)
     serializer_class = TutorSerializer
 
     def destroy(self, request, *args, **kwargs):
@@ -30,3 +30,14 @@ class TutorRDU(RetrieveUpdateDestroyAPIView):
 
     def put(self, request, *args, **kwargs):
         return Response({"detail": 'Method "PUT" not allowed.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+class AbrigoLC(ListCreateAPIView):
+    queryset = User.objects.filter(is_tutor=False, is_shelter=True, is_active=True)
+    serializer_class = AbrigoSerializer
+    pagination_class = MyPagination
+
+
+class AbrigoRDU(RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.filter(is_tutor=False, is_shelter=True, is_active=True)
+    serializer_class = TutorSerializer
