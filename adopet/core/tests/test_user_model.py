@@ -20,6 +20,7 @@ def test_positive_default(user):
     assert not user.is_staff
     assert user.is_active
     assert not user.is_tutor
+    assert not user.is_shelter
 
 
 def test_create_at_and_modified_at(user):

@@ -4,9 +4,8 @@ from rest_framework import serializers
 from adopet.core.models import CustomUser as User
 
 
-class TutorSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(label="Senha de confirmação", max_length=128, write_only=True)
-    url = serializers.HyperlinkedIdentityField(view_name="core:read-delete-update-tutor", read_only=True)
 
     class Meta:
         model = User
@@ -15,6 +14,8 @@ class TutorSerializer(serializers.ModelSerializer):
             "name",
             "email",
             "is_active",
+            "is_tutor",
+            "is_shelter",
             "password",
             "password2",
             "url",
@@ -29,7 +30,6 @@ class TutorSerializer(serializers.ModelSerializer):
             email=validate_data["email"],
             password=validate_data["password"],
         )
-
         return user
 
     def validate(self, attrs):
@@ -43,3 +43,23 @@ class TutorSerializer(serializers.ModelSerializer):
     def validate_password(self, value):
         validate_password(value)
         return value
+
+
+class TutorSerializer(UserSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="core:read-delete-update-tutor", read_only=True)
+
+    def create(self, validate_data):
+        user = super().create(validate_data)
+        user.is_tutor = True
+        user.save()
+        return user
+
+
+class AbrigoSerializer(UserSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="core:read-delete-update-abrigo", read_only=True)
+
+    def create(self, validate_data):
+        user = super().create(validate_data)
+        user.is_shelter = True
+        user.save()
+        return user

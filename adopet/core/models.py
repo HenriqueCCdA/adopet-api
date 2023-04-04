@@ -28,6 +28,7 @@ class CustomUser(CreationModificationBase, AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField("Ativo", default=True)
 
     is_tutor = models.BooleanField("Tutor", default=False)
+    is_shelter = models.BooleanField("Schelter", default=False)
 
     objects = UserManager()
 
@@ -53,4 +54,7 @@ class CustomUser(CreationModificationBase, AbstractBaseUser, PermissionsMixin):
         return self.email
 
     def get_absolute_url(self):
-        return f"tutor/{self.pk}/"
+        if self.is_tutor:
+            return f"tutor/{self.pk}/"
+        if self.is_shelter:
+            return f"abrigo/{self.pk}/"
