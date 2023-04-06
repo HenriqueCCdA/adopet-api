@@ -32,12 +32,16 @@ class TutorRDU(RetrieveUpdateDestroyAPIView):
         return Response({"detail": 'Method "PUT" not allowed.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-class AbrigoLC(ListCreateAPIView):
+class ShelterLC(ListCreateAPIView):
     queryset = User.objects.filter(is_tutor=False, is_shelter=True, is_active=True)
     serializer_class = AbrigoSerializer
     pagination_class = MyPagination
 
 
-class AbrigoRDU(RetrieveUpdateDestroyAPIView):
+class ShelterRDU(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.filter(is_tutor=False, is_shelter=True, is_active=True)
-    serializer_class = TutorSerializer
+    serializer_class = AbrigoSerializer
+
+
+shelter_list_create = ShelterLC.as_view()
+shelter_read_delete_update = ShelterRDU.as_view()

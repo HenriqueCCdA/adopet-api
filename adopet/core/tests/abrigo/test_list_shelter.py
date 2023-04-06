@@ -8,7 +8,7 @@ pytestmark = pytest.mark.django_db
 User = get_user_model()
 
 
-URL = "core:list-create-abrigo"
+URL = "core:list-create-shelter"
 
 
 def test_positive_list(client_api, users):
