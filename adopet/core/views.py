@@ -52,5 +52,8 @@ class ShelterRDU(RetrieveUpdateDestroyAPIView):
         instance.save()
 
 
+tutor_list_create = TutorLC.as_view()
+tutor_read_delete_update = TutorRDU.as_view()
+
 shelter_list_create = ShelterLC.as_view()
 shelter_read_delete_update = ShelterRDU.as_view()
