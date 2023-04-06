@@ -42,6 +42,15 @@ class ShelterRDU(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.filter(is_tutor=False, is_shelter=True, is_active=True)
     serializer_class = AbrigoSerializer
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(data={"msg": "Abrigo deletado com sucesso."}, status=status.HTTP_200_OK)
+
+    def perform_destroy(self, instance):
+        instance.is_active = False
+        instance.save()
+
 
 shelter_list_create = ShelterLC.as_view()
 shelter_read_delete_update = ShelterRDU.as_view()

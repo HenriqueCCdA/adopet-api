@@ -12,6 +12,10 @@ URL = "core:list-create-shelter"
 
 
 def test_positive_list(client_api, users):
+    """
+    Shelter list. Return 200.
+    """
+
     url = resolve_url(URL)
 
     resp = client_api.get(url)
@@ -53,6 +57,10 @@ def test_positive_list_empty(client_api):
 
 
 def test_positive_pagination(client_api, users):
+    """
+    Shelter list pagination. Return 200.
+    """
+
     url = resolve_url(URL)
 
     resp = client_api.get(f"{url}?page=2&page_size=2")
@@ -80,6 +88,10 @@ def test_positive_pagination(client_api, users):
 
 
 def test_negative_invalid_page_pagination(client_api, users):
+    """
+    Invalid page. Return 404 and 'Invalid page'.
+    """
+
     url = resolve_url(URL)
 
     resp = client_api.get(f"{url}?page=5")

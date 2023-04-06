@@ -8,27 +8,35 @@ pytestmark = pytest.mark.django_db
 User = get_user_model()
 
 
-URL = "core:read-delete-update-tutor"
+URL = "core:read-delete-update-shelter"
 
 
 def test_positive_by_id(client_api, users):
-    tutor = User.objects.filter(is_active=True, is_tutor=True).first()
+    """
+    Sotf delete: return 200 and a msg.
+    """
 
-    pk = tutor.pk
+    shelter = User.objects.filter(is_active=True, is_tutor=False, is_shelter=True).first()
+
+    pk = shelter.pk
 
     url = resolve_url(URL, pk=pk)
 
     resp = client_api.delete(url)
 
     assert resp.status_code == status.HTTP_200_OK
-    tutor = User.objects.get(pk=pk)
+    shelter = User.objects.get(pk=pk)
     body = resp.json()
 
-    assert body["msg"] == "Tutor deletado com sucesso."
-    assert not tutor.is_active
+    assert body["msg"] == "Abrigo deletado com sucesso."
+    assert not shelter.is_active
 
 
 def test_negative_invalid_id(client_api, users):
+    """
+    Wrong id must return 404
+    """
+
     url = resolve_url(URL, pk=404)
 
     resp = client_api.delete(url)
@@ -40,8 +48,12 @@ def test_negative_invalid_id(client_api, users):
     assert body["detail"] == "Not found."
 
 
-def test_negative_tutor_inactive_must_return_404(client_api, users):
-    pk = User.objects.filter(is_active=False).values_list("pk").first()[0]
+def test_negative_shelter_inactive_must_return_404(client_api, users):
+    """
+    Inactive shelter must return 404
+    """
+
+    pk = User.objects.filter(is_active=False, is_tutor=False, is_shelter=True).values_list("pk").first()[0]
 
     url = resolve_url(URL, pk=pk)
 
