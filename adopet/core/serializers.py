@@ -56,7 +56,7 @@ class TutorSerializer(UserSerializer):
 
 
 class AbrigoSerializer(UserSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="core:read-delete-update-abrigo", read_only=True)
+    url = serializers.HyperlinkedIdentityField(view_name="core:read-delete-update-shelter", read_only=True)
 
     def create(self, validate_data):
         user = super().create(validate_data)
