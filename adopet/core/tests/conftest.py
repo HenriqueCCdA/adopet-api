@@ -44,3 +44,15 @@ def create_tutor_payload():
         "password": password,
         "password2": password,
     }
+
+
+@pytest.fixture
+def create_abrigo_payload():
+    password = fake.password()
+
+    return {
+        "name": fake.name(),
+        "email": fake.email(),
+        "password": password,
+        "password2": password,
+    }
