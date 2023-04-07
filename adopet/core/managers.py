@@ -1,4 +1,24 @@
 from django.contrib.auth.base_user import BaseUserManager
+from django.db import models
+
+
+class UserQuerySet(models.QuerySet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.quetyset = None
+
+    def tutor(self, all):
+        self.queryset = self.filter(is_tutor=True, is_shelter=False)
+        return self._queryset_all(all)
+
+    def shelter(self, all):
+        self.queryset = self.filter(is_tutor=False, is_shelter=True)
+        return self._queryset_all(all)
+
+    def _queryset_all(self, all):
+        if all:
+            return self.queryset
+        return self.queryset.filter(is_active=True)
 
 
 class UserManager(BaseUserManager):
@@ -30,3 +50,12 @@ class UserManager(BaseUserManager):
             raise ValueError("Superuser must have is_superuser=True.")
 
         return self._create_user(email, password, **extra_fields)
+
+    def get_queryset(self):
+        return UserQuerySet(self.model, using=self._db)
+
+    def tutor(self, all=False):
+        return self.get_queryset().tutor(all)
+
+    def shelter(self, all=False):
+        return self.get_queryset().shelter(all)

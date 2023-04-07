@@ -10,13 +10,13 @@ User = get_user_model()
 
 
 class TutorLC(ListCreateAPIView):
-    queryset = User.objects.filter(is_tutor=True, is_shelter=False, is_active=True)
+    queryset = User.objects.tutor()
     serializer_class = TutorSerializer
     pagination_class = MyPagination
 
 
 class TutorRDU(RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.filter(is_tutor=True, is_shelter=False, is_active=True)
+    queryset = User.objects.tutor()
     serializer_class = TutorSerializer
 
     def destroy(self, request, *args, **kwargs):
@@ -33,13 +33,13 @@ class TutorRDU(RetrieveUpdateDestroyAPIView):
 
 
 class ShelterLC(ListCreateAPIView):
-    queryset = User.objects.filter(is_tutor=False, is_shelter=True, is_active=True)
+    queryset = User.objects.shelter()
     serializer_class = AbrigoSerializer
     pagination_class = MyPagination
 
 
 class ShelterRDU(RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.filter(is_tutor=False, is_shelter=True, is_active=True)
+    queryset = User.objects.shelter()
     serializer_class = AbrigoSerializer
 
     def destroy(self, request, *args, **kwargs):
