@@ -30,7 +30,7 @@ def test_positive(client_api, users):
 
 
 def test_negative_invalid_id(client_api, users):
-    url = resolve_url(URL, pk=404)
+    url = resolve_url(URL, pk=444444)
 
     resp = client_api.patch(url)
 
