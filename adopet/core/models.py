@@ -28,7 +28,7 @@ class CustomUser(CreationModificationBase, AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField("Ativo", default=True)
 
     is_tutor = models.BooleanField("Tutor", default=False)
-    is_shelter = models.BooleanField("Schelter", default=False)
+    is_shelter = models.BooleanField("Abrigo", default=False)
 
     objects = UserManager()
 
