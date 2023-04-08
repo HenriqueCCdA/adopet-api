@@ -82,11 +82,6 @@ fmt:
 PHONNY: mkvenv
 mkvenv:
 	@python -m venv .venv --upgrade-deps
-	@source .venv/bin/activate
-
-PHONNY: venv
-venv:
-	@source .venv/bin/activate
 
 clean:
 	@find ./web_server/ -name '*.pyc' -exec rm -f {} \;
