@@ -38,7 +38,7 @@ def test_negative_invalid_id(client_api, users):
 
     body = resp.json()
 
-    assert body["detail"] == "Not found."
+    assert body["detail"] == "Não encontrado."
 
 
 def test_negative_tutor_inactive_must_return_404(client_api, users):
@@ -52,7 +52,7 @@ def test_negative_tutor_inactive_must_return_404(client_api, users):
 
     body = resp.json()
 
-    assert body["detail"] == "Not found."
+    assert body["detail"] == "Não encontrado."
 
 
 def test_negative_email_mest_be_unique(client_api, users):
@@ -86,7 +86,7 @@ def test_negative_invalid_email(client_api, users):
 
     body = resp.json()
 
-    assert body["email"] == ["Informe um endereço de email válido."]
+    assert body["email"] == ["Insira um endereço de email válido."]
 
 
 def test_negative_put_is_not_allowed(client_api, users):

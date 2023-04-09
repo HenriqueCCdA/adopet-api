@@ -72,4 +72,4 @@ def test_negative_invalid_page_pagination(client_api, users):
 
     body = resp.json()
 
-    assert body["detail"] == "Invalid page."
+    assert body["detail"] == "Página inválida."

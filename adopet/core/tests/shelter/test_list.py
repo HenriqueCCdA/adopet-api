@@ -89,7 +89,7 @@ def test_positive_pagination(client_api, users):
 
 def test_negative_invalid_page_pagination(client_api, users):
     """
-    Invalid page. Return 404 and 'Invalid page'.
+    Página inválida. Return 404 and 'Invalid page'.
     """
 
     url = resolve_url(URL)
@@ -100,4 +100,4 @@ def test_negative_invalid_page_pagination(client_api, users):
 
     body = resp.json()
 
-    assert body["detail"] == "Invalid page."
+    assert body["detail"] == "Página inválida."
