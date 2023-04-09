@@ -44,7 +44,7 @@ def test_negative_invalid_id(client_api, users):
 
     body = resp.json()
 
-    assert body["detail"] == "Not found."
+    assert body["detail"] == "Não encontrado."
 
 
 def test_negative_tutor_inactive_must_return_404(client_api, users):
@@ -58,4 +58,4 @@ def test_negative_tutor_inactive_must_return_404(client_api, users):
 
     body = resp.json()
 
-    assert body["detail"] == "Not found."
+    assert body["detail"] == "Não encontrado."

@@ -27,8 +27,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_extensions",
     #
-    # "restframework",
+    "rest_framework",
+    #
     "adopet.core",
+    "adopet.pet",
 ]
 
 MIDDLEWARE = [
