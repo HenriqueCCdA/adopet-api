@@ -3,15 +3,16 @@ services:
   app:
     container_name: adopet_api_app
     build:
-      dockerfile: ./Dockerfile
+      dockerfile: docker/Dockerfile.dev
       context: .
-    image: django_xml:0.1.0
-    command: python manage.py runserver 0.0.0.0:8000
+    image: adopet:latest
+    volumes:
+      - .:/app/
     restart: 'no'
     env_file:
       - .env
     environment:
-      - DATABASE_URL=postgres://xml_user:123456@database:5432/xml_user
+      - DATABASE_URL=postgres://adopet_user:123456@database:5432/adopet_user
     ports:
       - 8000:8000
     depends_on:

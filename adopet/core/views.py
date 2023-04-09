@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import status
+from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 
@@ -7,6 +8,11 @@ from adopet.core.paginators import MyPagination
 from adopet.core.serializers import AbrigoSerializer, TutorSerializer
 
 User = get_user_model()
+
+
+class Version(APIView):
+    def get(self, request):
+        return Response({"version": 2.0})
 
 
 class TutorLC(ListCreateAPIView):
@@ -60,3 +66,5 @@ tutor_read_delete_update = TutorRDU.as_view()
 
 shelter_list_create = ShelterLC.as_view()
 shelter_read_delete_update = ShelterRDU.as_view()
+
+version = Version.as_view()

@@ -19,55 +19,41 @@ PHONNY: docker_up_db
 docker_up_db:
 	@docker compose up -d database
 
-PHONNY: docker_build_prod
-docker_build_prod:
+
+PHONNY: docker_build
+docker_build:
 	@docker compose build
-
-PHONNY: docker_build_and_up_prod
-docker_build_and_up_prod:
-	@docker compose build
-	@docker compose up -d
-
-PHONNY: docker_up_prod
-docker_up_prod:
-	@docker compose up -d
-
-
-PHONNY: docker_down_prod
-docker_down_prod:
-	@docker compose down
-
-PHONNY: docker_build_dev
-docker_build_dev:
-	@docker compose -f docker-compose.dev.yml build
 
 PHONNY: docker_build_and_up_dev
-docker_build_and_up_dev:
-	@docker compose -f docker-compose.dev.yml build
-	@docker compose -f docker-compose.dev.yml up -d
+docker_build_and_up:
+	@docker compose build
+	@docker compose up -d
 
-PHONNY: docker_up_dev
-docker_up_dev:
-	@docker compose -f docker-compose.dev.yml up -d
+PHONNY: docker_up
+docker_up:
+	@docker compose up -d
 
 PHONNY: docker_down_dev
-docker_down_dev:
-	@docker compose -f docker-compose.dev.yml down
+docker_down:
+	@docker compose down
+
+PHONNY: docker_makemigrations
+docker_makemigrations:
+	@docker compose exec app ./manage.py makemigrations
 
 PHONNY: docker_migrate
 docker_migrate:
-	@docker compose exec api ./manage.py migrate
-
+	@docker compose exec app ./manage.py migrate
 
 PHONNY: docker_create_admin
 docker_create_admin:
-	@docker compose exec -it api ./manage.py createsuperuser
+	@docker compose exec -it app ./manage.py createsuperuser
 
 # Docker pytest
 
 PHONNY: docker_pytest
 docker_pytest:
-	@docker compose -f docker-compose.dev.yml run api pytest -n 4
+	@docker compose run app pytest
 
 #
 PHONNY: linter
@@ -82,6 +68,7 @@ fmt:
 PHONNY: mkvenv
 mkvenv:
 	@python -m venv .venv --upgrade-deps
+
 
 clean:
 	@find ./web_server/ -name '*.pyc' -exec rm -f {} \;

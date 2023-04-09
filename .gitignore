@@ -139,3 +139,5 @@ db
 *-workspace
 
 test-result.xml
+
+docker-compose.yml

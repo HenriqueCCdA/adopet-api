@@ -16,16 +16,17 @@ RUN apt-get update && apt-get install -y\
     && rm -rf /var/lib/apt/lists/*
 
 # copy project
-COPY requirements.txt .
+COPY requirements.txt requirements-dev.txt ./
 
 # install dependencies
 RUN set -ex && \
     pip install -U pip &&\
     pip install --no-cache-dir -r requirements.txt --no-deps &&\
+    pip install --no-cache-dir -r requirements-dev.txt --no-deps &&\
     pip cache purge
 
 COPY . .
 
 EXPOSE 8000
 
-CMD ["gunicorn", "--bind", ":8000", "--workers", "2", "adopet_api.wsgi"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
