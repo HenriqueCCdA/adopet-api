@@ -1,7 +1,14 @@
-from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
+from adopet.core.paginators import MyPagination
 from adopet.pet.models import Pet
 from adopet.pet.serializers import PetSerializer
+
+
+class PetLC(ListCreateAPIView):
+    queryset = Pet.objects.filter(is_active=True)
+    serializer_class = PetSerializer
+    pagination_class = MyPagination
 
 
 class PetRDU(RetrieveUpdateDestroyAPIView):
@@ -10,3 +17,4 @@ class PetRDU(RetrieveUpdateDestroyAPIView):
 
 
 rdu_pet = PetRDU.as_view()
+lc_pet = PetLC.as_view()

@@ -20,6 +20,7 @@ def pet(shelter):
 @pytest.fixture
 def pets(shelter):
     baker.make(Pet, _quantity=4, shelter=shelter)
+    baker.make(Pet, _quantity=2, is_adopted=True, shelter=shelter)
     baker.make(Pet, _quantity=3, is_active=False, shelter=shelter)
 
     return list(Pet.objects.all())
