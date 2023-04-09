@@ -26,7 +26,6 @@ DEBUG=True
 SECRET_KEY=Sua_chave_secreta_aqui!
 ALLOWED_HOSTS=127.0.0.1,localhost
 DATABASE_URL=postgres://adopet_user:123456@localhost:5432/adopet_user
-
 ```
 
 
@@ -34,13 +33,13 @@ DATABASE_URL=postgres://adopet_user:123456@localhost:5432/adopet_user
 
 Você precisa primeiro compiar o docker compose de desenvolvimento para a raiz do projeto
 
-```
+```console
 cp docker/docker-compose.dev.yml docker-compose.yml
 ```
 
 Agora você pode subir a aplicação com
 
-```
+```console
 make docker_build_and_up
 ```
 
@@ -48,7 +47,7 @@ A aplicação estará disponivel em `http://localhost:8000/`
 
 Todas as variaveis de ambiente são as definida no arquivo `.env` exceto o `DATABASE_URL`que é sobrescrito dentro do docker compose.
 
-### Outros comando
+### Outros comandos
 
 * rodando os testes : `make docker_pytest`
 * aplicando as migrações: `make docker_migrate`
@@ -58,7 +57,3 @@ Todas as variaveis de ambiente são as definida no arquivo `.env` exceto o `DATA
 * parando os containers: `make docker_down`
 * gerando a imagem da aplicação: `make build`
 * subindo o container do banco de dados: `make up_db`
-
-```
-make docker_pytest
-```
