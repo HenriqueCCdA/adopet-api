@@ -1,22 +1,10 @@
 from datetime import datetime
 
 import pytest
-from model_bakery import baker
 
-from adopet.core.models import CustomUser as User
 from adopet.pet.models import Pet
 
 pytestmark = pytest.mark.django_db
-
-
-@pytest.fixture
-def shelter():
-    return baker.make(User, is_shelter=True, is_active=False)
-
-
-@pytest.fixture
-def pet(shelter):
-    return baker.make(Pet, shelter=shelter)
 
 
 def test_positive_create(pet):
@@ -38,8 +26,8 @@ def test_str(pet):
     assert str(pet) == pet.name
 
 
-def test_relations(pet, shelter):
-    assert pet.shelter == shelter
+def test_relations(pets, shelter):
+    assert pets[0].shelter == shelter
 
-    assert shelter.pets.count() == 1
-    assert shelter.pets.first() == pet
+    assert shelter.pets.count() == 4
+    assert shelter.pets.last() == pets[-1]

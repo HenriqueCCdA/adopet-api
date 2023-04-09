@@ -1,4 +1,3 @@
-from django.core.validators import MinValueValidator
 from django.db import models
 
 from adopet.core.models import CreationModificationBase
@@ -13,7 +12,7 @@ class Pet(CreationModificationBase):
 
     name = models.CharField("Nome", max_length=100)
     size = models.CharField("Porte", max_length=1, choices=Size.choices)
-    age = models.SmallIntegerField("Idade", validators=[MinValueValidator(0.0)])
+    age = models.PositiveSmallIntegerField("Idade")
     behavior = models.CharField("Comportamento", max_length=100)
 
     shelter = models.ForeignKey(
