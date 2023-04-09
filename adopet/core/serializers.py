@@ -63,3 +63,5 @@ class AbrigoSerializer(UserSerializer):
         user.is_shelter = True
         user.save()
         return user
+
+    # TODO: adiciona a campo pets
