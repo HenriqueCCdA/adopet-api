@@ -29,5 +29,5 @@ def test_str(pet):
 def test_relations(pets, shelter):
     assert pets[0].shelter == shelter
 
-    assert shelter.pets.count() == 4
+    assert shelter.pets.count() == 7
     assert shelter.pets.last() == pets[-1]
