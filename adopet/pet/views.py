@@ -26,6 +26,9 @@ class PetRDU(RetrieveUpdateDestroyAPIView):
         instance.is_active = False
         instance.save()
 
+    def put(self, request, *args, **kwargs):
+        return Response({"detail": 'Method "PUT" not allowed.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 
 rdu_pet = PetRDU.as_view()
 lc_pet = PetLC.as_view()

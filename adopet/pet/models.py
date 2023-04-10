@@ -27,7 +27,7 @@ class Pet(CreationModificationBase):
     )
 
     is_active = models.BooleanField("Ativo", default=True)
-    is_adopted = models.BooleanField("Addotado", default=False)
+    is_adopted = models.BooleanField("Adotado", default=False)
 
     class Meta:
         ordering = ("-created_at",)

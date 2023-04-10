@@ -26,7 +26,7 @@ def test_positive_list(client_api, pets):
     for r, db in zip(body["results"], Pet.objects.filter(is_active=True)):
         assert r["id"] == db.id
         assert r["name"] == db.name
-        assert r["size"] == db.get_size_display()
+        assert r["size"] == db.size
         assert r["age"] == db.age
         assert r["behavior"] == db.behavior
         assert r["shelter"] == db.shelter.pk
@@ -53,7 +53,7 @@ def test_positive_pagination(client_api, pets):
     for r, db in zip(body["results"], pets_):
         assert r["id"] == db.id
         assert r["name"] == db.name
-        assert r["size"] == db.get_size_display()
+        assert r["size"] == db.size
         assert r["age"] == db.age
         assert r["behavior"] == db.behavior
         assert r["shelter"] == db.shelter.pk

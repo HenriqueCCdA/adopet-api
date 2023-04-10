@@ -23,7 +23,7 @@ def test_positive_get_by_id(client_api, pet):
 
     assert body["id"] == pet.id
     assert body["name"] == pet.name
-    assert body["size"] == pet.get_size_display()
+    assert body["size"] == pet.size
     assert body["age"] == pet.age
     assert body["behavior"] == pet.behavior
     assert body["shelter"] == pet.shelter.pk

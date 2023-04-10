@@ -23,7 +23,7 @@ def test_positive(client_api, users):
     resp = client_api.patch(url, data=data)
 
     assert resp.status_code == status.HTTP_200_OK
-    tutor = User.objects.get(pk=pk)
+
     body = resp.json()
 
     assert body["name"] == "Update name"
