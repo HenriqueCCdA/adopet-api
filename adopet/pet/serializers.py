@@ -4,8 +4,6 @@ from adopet.pet.models import Pet
 
 
 class PetSerializer(serializers.ModelSerializer):
-    size = serializers.SerializerMethodField()
-
     class Meta:
         model = Pet
         fields = (
@@ -19,6 +17,3 @@ class PetSerializer(serializers.ModelSerializer):
             "created_at",
             "modified_at",
         )
-
-    def get_size(self, obj):
-        return obj.get_size_display()

@@ -1,14 +1,10 @@
 import pytest
-from django.contrib.auth import get_user_model
 from django.shortcuts import resolve_url
 from rest_framework import status
 
 from adopet.pet.models import Pet
 
 pytestmark = pytest.mark.django_db
-
-User = get_user_model()
-
 
 URL = "pet:read-delete-update"
 

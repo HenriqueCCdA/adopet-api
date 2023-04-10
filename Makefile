@@ -53,7 +53,7 @@ docker_create_admin:
 
 PHONNY: docker_pytest
 docker_pytest:
-	@docker compose run app pytest
+	@docker compose run app pytest -s
 
 #
 PHONNY: linter

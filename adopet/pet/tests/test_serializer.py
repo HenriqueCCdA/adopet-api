@@ -12,7 +12,7 @@ def test_positive_serialization_objs_list(pets):
     for data, db in zip(serializer.data, pets):
         assert data["id"] == db.id
         assert data["name"] == db.name
-        assert data["size"] == db.get_size_display()
+        assert data["size"] == db.size
         assert data["age"] == db.age
         assert data["behavior"] == db.behavior
         assert data["shelter"] == db.shelter.pk
@@ -28,7 +28,7 @@ def test_positive_serialization_one_obj(pet):
 
     assert data["id"] == pet.pk
     assert data["name"] == pet.name
-    assert data["size"] == pet.get_size_display()
+    assert data["size"] == pet.size
     assert data["age"] == pet.age
     assert data["behavior"] == pet.behavior
     assert data["shelter"] == pet.shelter.pk
