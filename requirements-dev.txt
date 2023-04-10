@@ -128,6 +128,10 @@ django==4.1.7 \
     # via
     #   -c requirements.txt
     #   model-bakery
+execnet==1.9.0 \
+    --hash=sha256:8f694f3ba9cc92cab508b152dcfe322153975c29bda272e2fd7f3f00f36e47c5 \
+    --hash=sha256:a295f7cc774947aac58dde7fdc85f4aa00c42adf5d8f5468fc630c1acf30a142
+    # via pytest-xdist
 executing==1.2.0 \
     --hash=sha256:0314a69e37426e3608aada02473b4161d4caf5a4b244d1d0c48072b8fee7bacc \
     --hash=sha256:19da64c18d2d851112f09c287f8d3dbbdf725ab0e569077efb6cdcbd3497c107
@@ -261,6 +265,7 @@ pytest==7.2.2 \
     #   -r requirements-dev.in
     #   pytest-cov
     #   pytest-django
+    #   pytest-xdist
 pytest-cov==4.0.0 \
     --hash=sha256:2feb1b751d66a8bd934e5edfa2e961d11309dc37b73b0eabe73b5945fee20f6b \
     --hash=sha256:996b79efde6433cdbd0088872dbc5fb3ed7fe1578b68cdbba634f14bb8dd0470
@@ -268,6 +273,10 @@ pytest-cov==4.0.0 \
 pytest-django==4.5.2 \
     --hash=sha256:c60834861933773109334fe5a53e83d1ef4828f2203a1d6a0fa9972f4f75ab3e \
     --hash=sha256:d9076f759bb7c36939dbdd5ae6633c18edfc2902d1a69fdbefd2426b970ce6c2
+    # via -r requirements-dev.in
+pytest-xdist==3.2.1 \
+    --hash=sha256:1849bd98d8b242b948e472db7478e090bf3361912a8fed87992ed94085f54727 \
+    --hash=sha256:37290d161638a20b672401deef1cba812d110ac27e35d213f091d15b8beb40c9
     # via -r requirements-dev.in
 python-dateutil==2.8.2 \
     --hash=sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86 \

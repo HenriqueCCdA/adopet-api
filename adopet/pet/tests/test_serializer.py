@@ -1,4 +1,5 @@
 import pytest
+from django.test import RequestFactory
 
 from adopet.pet.models import Pet
 from adopet.pet.serializers import PetSerializer
@@ -7,7 +8,9 @@ pytestmark = pytest.mark.django_db
 
 
 def test_positive_serialization_objs_list(pets):
-    serializer = PetSerializer(instance=Pet.objects.all(), many=True)
+    request = RequestFactory().request()
+
+    serializer = PetSerializer(instance=Pet.objects.all(), many=True, context={"request": request})
 
     for data, db in zip(serializer.data, pets):
         assert data["id"] == db.id
@@ -22,7 +25,9 @@ def test_positive_serialization_objs_list(pets):
 
 
 def test_positive_serialization_one_obj(pet):
-    serializer = PetSerializer(instance=pet)
+    request = RequestFactory().request()
+
+    serializer = PetSerializer(instance=pet, context={"request": request})
 
     data = serializer.data
 
@@ -48,4 +53,57 @@ def test_positive_metadata_fields():
     assert serializer.fields["behavior"].max_length == 100
 
 
-# TODO Testa depois a parte da validação e criação
+@pytest.mark.parametrize(
+    "field",
+    [
+        "name",
+        "size",
+        "age",
+        "behavior",
+        "shelter",
+    ],
+)
+def test_negative_missing_fields(field, create_pet_payload):
+    data = create_pet_payload.copy()
+
+    del data[field]
+
+    serializer = PetSerializer(data=data)
+
+    assert not serializer.is_valid()
+
+    assert serializer.errors[field] == ["Este campo é obrigatório."]
+
+
+@pytest.mark.parametrize(
+    "field, value, error",
+    [
+        ("name", "a" * 101, "Certifique-se de que este campo não tenha mais de 100 caracteres."),
+        ("size", "ab", '"ab" não é um escolha válido.'),
+        ("age", -1, "Certifque-se de que este valor seja maior ou igual a 0."),
+        ("age", "d-1", "Um número inteiro válido é exigido."),
+        ("behavior", "a" * 101, "Certifique-se de que este campo não tenha mais de 100 caracteres."),
+        ("shelter", 11111, 'Pk inválido "11111" - objeto não existe.'),
+        ("shelter", "dd", "Tipo incorreto. Esperado valor pk, recebeu str."),
+    ],
+)
+def test_negative_validation_errors(field, value, error, create_pet_payload):
+    data = create_pet_payload.copy()
+
+    data[field] = value
+
+    serializer = PetSerializer(data=data)
+
+    assert not serializer.is_valid()
+
+    assert serializer.errors[field] == [error]
+
+
+def test_positive_create_pet(create_pet_payload):
+    serializer = PetSerializer(data=create_pet_payload)
+
+    assert serializer.is_valid()
+
+    serializer.save()
+
+    assert Pet.objects.exists()
