@@ -4,6 +4,8 @@ from adopet.pet.models import Pet
 
 
 class PetSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="pet:read-delete-update", read_only=True)
+
     class Meta:
         model = Pet
         fields = (
@@ -13,6 +15,7 @@ class PetSerializer(serializers.ModelSerializer):
             "age",
             "behavior",
             "shelter",
+            "url",
             "is_adopted",
             "created_at",
             "modified_at",

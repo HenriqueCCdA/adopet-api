@@ -43,9 +43,9 @@ Agora você pode subir a aplicação com
 make docker_build_and_up
 ```
 
-A aplicação estará disponivel em `http://localhost:8000/`
+A aplicação ficará disponivel em `http://localhost:8000/`
 
-Todas as variaveis de ambiente são as definida no arquivo `.env` exceto o `DATABASE_URL`que é sobrescrito dentro do docker compose.
+Todas as variaveis de ambiente são as definida no arquivo `.env` exceto o `DATABASE_URL` que é sobrescrito dentro do docker compose. Além disso foi utilizazndo `PYTHONBREAKPOINT=ipdb.set_trace` portanto para usar é necessario usar o `pytest` com `-s` caso você queria usar `breakpoints`.
 
 ### Outros comandos
 
