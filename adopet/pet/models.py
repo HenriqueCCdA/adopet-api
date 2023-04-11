@@ -34,3 +34,26 @@ class Pet(CreationModificationBase):
 
     def __str__(self):
         return self.name
+
+
+class Adoption(CreationModificationBase):
+    pet = models.OneToOneField(Pet, on_delete=models.CASCADE)
+    # TODO: Colocar um limite para numero de adoções de um tutor
+    tutor = models.ForeignKey(
+        User,
+        related_name="adoptions",
+        on_delete=models.CASCADE,
+        limit_choices_to={
+            "is_shelter": False,
+            "is_active": True,
+            "is_tutor": True,
+        },
+    )
+    date = models.DateField("Data")
+    is_active = models.BooleanField("Ativo", default=True)
+
+    class Meta:
+        ordering = ("-created_at",)
+
+    def __str__(self):
+        return f"{self.tutor.name}:{self.pet}"

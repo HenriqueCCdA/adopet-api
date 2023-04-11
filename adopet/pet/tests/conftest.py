@@ -3,7 +3,7 @@ from model_bakery import baker
 
 from adopet.conftest import fake
 from adopet.core.models import CustomUser as User
-from adopet.pet.models import Pet
+from adopet.pet.models import Adoption, Pet
 
 pytestmark = pytest.mark.django_db
 
@@ -11,6 +11,11 @@ pytestmark = pytest.mark.django_db
 @pytest.fixture
 def shelter():
     return baker.make(User, is_shelter=True, is_active=True)
+
+
+@pytest.fixture
+def tutor():
+    return baker.make(User, is_tutor=True, is_active=True)
 
 
 @pytest.fixture
@@ -28,6 +33,11 @@ def pets(shelter):
 
 
 @pytest.fixture
+def adoption(pet, tutor):
+    return baker.make(Adoption, pet=pet, tutor=tutor)
+
+
+@pytest.fixture
 def create_pet_payload(shelter):
     return {
         "name": fake.name(),
@@ -35,4 +45,13 @@ def create_pet_payload(shelter):
         "age": 2,
         "behavior": fake.sentence(nb_words=5),
         "shelter": shelter.pk,
+    }
+
+
+@pytest.fixture
+def create_adoption_payload(pet, tutor):
+    return {
+        "pet": pet.pk,
+        "tutor": tutor.pk,
+        "date": "2011-04-01",
     }
