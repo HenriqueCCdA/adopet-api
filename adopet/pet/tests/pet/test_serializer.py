@@ -99,7 +99,7 @@ def test_negative_validation_errors(field, value, error, create_pet_payload):
     assert serializer.errors[field] == [error]
 
 
-def test_positive_create_pet(create_pet_payload):
+def test_positive_create(create_pet_payload):
     serializer = PetSerializer(data=create_pet_payload)
 
     assert serializer.is_valid()

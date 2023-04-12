@@ -1,6 +1,7 @@
+from django.db import transaction
 from rest_framework import serializers
 
-from adopet.pet.models import Pet
+from adopet.pet.models import Adoption, Pet
 
 
 class PetSerializer(serializers.ModelSerializer):
@@ -20,3 +21,29 @@ class PetSerializer(serializers.ModelSerializer):
             "created_at",
             "modified_at",
         )
+
+
+class AdoptionSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="pet:read-delete-adoption", read_only=True)
+
+    class Meta:
+        model = Adoption
+        fields = (
+            "id",
+            "pet",
+            "tutor",
+            "date",
+            "url",
+            "created_at",
+            "modified_at",
+        )
+
+    def create(self, validate_data):
+        with transaction.atomic():
+            adoption = super().create(validate_data)
+            self._change_to_adopted(adoption.pet)
+            return adoption
+
+    def _change_to_adopted(self, pet):
+        pet.is_adopted = True
+        pet.save()

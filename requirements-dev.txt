@@ -265,6 +265,7 @@ pytest==7.2.2 \
     #   -r requirements-dev.in
     #   pytest-cov
     #   pytest-django
+    #   pytest-mock
     #   pytest-xdist
 pytest-cov==4.0.0 \
     --hash=sha256:2feb1b751d66a8bd934e5edfa2e961d11309dc37b73b0eabe73b5945fee20f6b \
@@ -273,6 +274,10 @@ pytest-cov==4.0.0 \
 pytest-django==4.5.2 \
     --hash=sha256:c60834861933773109334fe5a53e83d1ef4828f2203a1d6a0fa9972f4f75ab3e \
     --hash=sha256:d9076f759bb7c36939dbdd5ae6633c18edfc2902d1a69fdbefd2426b970ce6c2
+    # via -r requirements-dev.in
+pytest-mock==3.10.0 \
+    --hash=sha256:f4c973eeae0282963eb293eb173ce91b091a79c1334455acfac9ddee8a1c784b \
+    --hash=sha256:fbbdb085ef7c252a326fd8cdcac0aa3b1333d8811f131bdcc701002e1be7ed4f
     # via -r requirements-dev.in
 pytest-xdist==3.2.1 \
     --hash=sha256:1849bd98d8b242b948e472db7478e090bf3361912a8fed87992ed94085f54727 \
