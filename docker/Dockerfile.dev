@@ -9,7 +9,10 @@ WORKDIR $USER_DIR
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-#
+# Create the app user
+RUN groupadd app && useradd -g app app
+
+# install depedencies for postgres
 RUN apt-get update && apt-get install -y\
     gcc\
     libpq-dev\
@@ -26,6 +29,9 @@ RUN set -ex && \
     pip cache purge
 
 COPY . .
+
+RUN chown -R app:app $USER_DIR
+USER app
 
 EXPOSE 8000
 
