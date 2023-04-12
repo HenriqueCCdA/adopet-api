@@ -1,4 +1,5 @@
 import pytest
+from django.db import DatabaseError
 from django.test import RequestFactory
 
 from adopet.pet.models import Adoption
@@ -64,11 +65,30 @@ def test_negative_validation_errors(field, value, error, create_adoption_payload
     assert serializer.errors[field] == [error]
 
 
-def test_positive_create_pet(create_adoption_payload):
+def test_positive_create(create_adoption_payload):
     serializer = AdoptionSerializer(data=create_adoption_payload)
 
     assert serializer.is_valid()
 
     serializer.save()
 
-    assert Adoption.objects.exists()
+    adoption = Adoption.objects.first()
+
+    assert adoption.pk
+    assert adoption.pet.is_adopted
+
+
+def test_negativel_create_error_in_change_pet_adopted_info(mocker, create_adoption_payload):
+    def raise_():
+        raise DatabaseError()
+
+    serializer = AdoptionSerializer(data=create_adoption_payload)
+
+    assert serializer.is_valid()
+
+    mocker.patch("adopet.pet.serializers.AdoptionSerializer._change_to_adopted", new=lambda x, y: raise_())
+
+    with pytest.raises(DatabaseError):
+        serializer.save()
+
+    assert not Adoption.objects.exists()

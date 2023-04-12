@@ -26,6 +26,8 @@ def test_positive(client_api, create_adoption_payload):
     assert body["created_at"] == adoption.created_at.astimezone().isoformat()
     assert body["modified_at"] == adoption.modified_at.astimezone().isoformat()
 
+    assert adoption.pet.is_adopted
+
     assert resp["Location"] == f"http://testserver/adoption/{adoption.pk}/"
 
 

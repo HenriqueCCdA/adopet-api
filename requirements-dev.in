@@ -3,6 +3,7 @@ pytest
 pytest-django
 pytest-cov
 pytest-xdist
+pytest-mock
 coverage
 black
 isort
