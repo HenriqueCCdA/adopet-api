@@ -10,7 +10,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # Create the app user
-RUN groupadd app && useradd -g app app
+# RUN groupadd app && useradd -g app app
 
 # install depedencies for postgres
 RUN apt-get update && apt-get install -y\
@@ -30,8 +30,8 @@ RUN set -ex && \
 
 COPY . .
 
-RUN chown -R app:app $USER_DIR
-USER app
+# RUN chown -R app:app $USER_DIR
+# USER app
 
 EXPOSE 8000
 

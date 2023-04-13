@@ -1,5 +1,6 @@
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 
 from adopet.core.models import CustomUser as User
 
@@ -52,6 +53,7 @@ class TutorSerializer(UserSerializer):
         user = super().create(validate_data)
         user.is_tutor = True
         user.save()
+        Token.objects.create(user=user)
         return user
 
 
@@ -62,6 +64,7 @@ class AbrigoSerializer(UserSerializer):
         user = super().create(validate_data)
         user.is_shelter = True
         user.save()
+        Token.objects.create(user=user)
         return user
 
     # TODO: adiciona a campo pets
