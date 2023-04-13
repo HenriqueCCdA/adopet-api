@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import status
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -8,6 +10,30 @@ from adopet.core.paginators import MyPagination
 from adopet.core.serializers import AbrigoSerializer, TutorSerializer
 
 User = get_user_model()
+
+
+class Whoami(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def get(self, request):
+        user = request.user
+
+        role = None
+
+        if user.is_tutor:
+            role = "tutor"
+        elif user.is_shelter:
+            role = "shelter"
+
+        data = {
+            "id": user.pk,
+            "name": user.name,
+            "email": user.email,
+            "role": role,
+        }
+
+        return Response(data)
 
 
 class Version(APIView):
@@ -68,3 +94,4 @@ shelter_list_create = ShelterLC.as_view()
 shelter_read_delete_update = ShelterRDU.as_view()
 
 version = Version.as_view()
+whoami = Whoami.as_view()

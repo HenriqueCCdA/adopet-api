@@ -15,4 +15,6 @@ urlpatterns = [
     path("abrigos/<int:pk>/", views.shelter_read_delete_update, name="read-delete-update-shelter"),
     #
     path("login/", obtain_auth_token, name="login"),
+    #
+    path("whoami/", views.whoami, name="whoami"),
 ]
