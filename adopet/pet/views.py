@@ -5,6 +5,7 @@ from rest_framework.generics import (
     RetrieveDestroyAPIView,
     RetrieveUpdateDestroyAPIView,
 )
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from adopet.core.paginators import MyPagination
@@ -16,11 +17,13 @@ class PetLC(ListCreateAPIView):
     queryset = Pet.objects.filter(is_active=True)  # TODO cria o maneger para isso-
     serializer_class = PetSerializer
     pagination_class = MyPagination
+    permission_classes = [IsAuthenticated]
 
 
 class PetRDU(RetrieveUpdateDestroyAPIView):
     queryset = Pet.objects.filter(is_active=True)  # TODO cria o maneger para isso
     serializer_class = PetSerializer
+    permission_classes = [IsAuthenticated]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

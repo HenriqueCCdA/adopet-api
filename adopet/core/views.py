@@ -1,11 +1,11 @@
 from django.contrib.auth import get_user_model
 from rest_framework import status
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from adopet.core.authentication import RegisterAuthenticated
 from adopet.core.paginators import MyPagination
 from adopet.core.serializers import AbrigoSerializer, TutorSerializer
 
@@ -14,7 +14,6 @@ User = get_user_model()
 
 class Whoami(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
 
     def get(self, request):
         user = request.user
@@ -26,12 +25,7 @@ class Whoami(APIView):
         elif user.is_shelter:
             role = "shelter"
 
-        data = {
-            "id": user.pk,
-            "name": user.name,
-            "email": user.email,
-            "role": role,
-        }
+        data = {"id": user.pk, "name": user.name, "email": user.email, "role": role}
 
         return Response(data)
 
@@ -42,14 +36,29 @@ class Version(APIView):
 
 
 class TutorLC(ListCreateAPIView):
+    """
+    View for Create or List a Tutor
+
+    POST: Register new tutor. Not need to be auth
+    GET: List tutors. Need to be auth
+    """
+
     queryset = User.objects.tutor()
     serializer_class = TutorSerializer
     pagination_class = MyPagination
+    permission_classes = [RegisterAuthenticated]
 
 
 class TutorRDU(RetrieveUpdateDestroyAPIView):
+    """
+    View for Read, Delete and Update a Tutor
+
+    Need to be auth
+    """
+
     queryset = User.objects.tutor()
     serializer_class = TutorSerializer
+    permission_classes = [IsAuthenticated]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -65,14 +74,29 @@ class TutorRDU(RetrieveUpdateDestroyAPIView):
 
 
 class ShelterLC(ListCreateAPIView):
+    """
+    View for Create or List a shelter
+
+    POST: Register new shelter. Not need to be auth
+    GET: List shelters. Need to be auth
+    """
+
     queryset = User.objects.shelter()
     serializer_class = AbrigoSerializer
     pagination_class = MyPagination
+    permission_classes = [RegisterAuthenticated]
 
 
 class ShelterRDU(RetrieveUpdateDestroyAPIView):
+    """
+    View for Read, Delete and Update a shelter
+
+    Need to be auth
+    """
+
     queryset = User.objects.shelter()
     serializer_class = AbrigoSerializer
+    permission_classes = [IsAuthenticated]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

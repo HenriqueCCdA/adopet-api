@@ -10,10 +10,10 @@ pytestmark = pytest.mark.django_db
 URL = "pet:list-create"
 
 
-def test_positive(client_api, create_pet_payload):
+def test_positive(client_api_auth_user, create_pet_payload):
     url = resolve_url(URL)
 
-    resp = client_api.post(url, data=create_pet_payload)
+    resp = client_api_auth_user.post(url, data=create_pet_payload)
     assert resp.status_code == status.HTTP_201_CREATED
 
     pet = Pet.objects.first()
@@ -42,14 +42,14 @@ def test_positive(client_api, create_pet_payload):
         "shelter",
     ],
 )
-def test_negative_missing_fields(client_api, field, create_pet_payload):
+def test_negative_missing_fields(client_api_auth_user, field, create_pet_payload):
     data = create_pet_payload.copy()
 
     del data[field]
 
     url = resolve_url(URL)
 
-    resp = client_api.post(url, data=data)
+    resp = client_api_auth_user.post(url, data=data)
 
     assert resp.status_code == status.HTTP_400_BAD_REQUEST
 
@@ -71,14 +71,14 @@ def test_negative_missing_fields(client_api, field, create_pet_payload):
         ("shelter", "dd", "Tipo incorreto. Esperado valor pk, recebeu str."),
     ],
 )
-def test_negative_validation_errors(client_api, field, value, error, create_pet_payload):
+def test_negative_validation_errors(client_api_auth_user, field, value, error, create_pet_payload):
     data = create_pet_payload.copy()
 
     data[field] = value
 
     url = resolve_url(URL)
 
-    resp = client_api.post(url, data=data)
+    resp = client_api_auth_user.post(url, data=data)
 
     assert resp.status_code == status.HTTP_400_BAD_REQUEST
 
@@ -86,3 +86,15 @@ def test_negative_validation_errors(client_api, field, value, error, create_pet_
     body = resp.json()
 
     assert body[field] == [error]
+
+
+def test_negative_must_be_auth(client_api, users):
+    url = resolve_url(URL)
+
+    resp = client_api.post(url)
+
+    assert resp.status_code == status.HTTP_401_UNAUTHORIZED
+
+    body = resp.json()
+
+    assert body["detail"] == "As credenciais de autenticação não foram fornecidas."
