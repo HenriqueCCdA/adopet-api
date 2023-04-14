@@ -11,14 +11,14 @@ User = get_user_model()
 URL = "core:read-delete-update-tutor"
 
 
-def test_positive_by_id(client_api, users):
+def test_positive_by_id(client_api_auth_tutor, users):
     tutor = User.objects.filter(is_active=True, is_tutor=True).first()
 
     pk = tutor.pk
 
     url = resolve_url(URL, pk=pk)
 
-    resp = client_api.delete(url)
+    resp = client_api_auth_tutor.delete(url)
 
     assert resp.status_code == status.HTTP_200_OK
     tutor = User.objects.get(pk=pk)
@@ -28,10 +28,10 @@ def test_positive_by_id(client_api, users):
     assert not tutor.is_active
 
 
-def test_negative_invalid_id(client_api, users):
+def test_negative_invalid_id(client_api_auth_tutor, users):
     url = resolve_url(URL, pk=404)
 
-    resp = client_api.delete(url)
+    resp = client_api_auth_tutor.delete(url)
 
     assert resp.status_code == status.HTTP_404_NOT_FOUND
 
@@ -40,15 +40,27 @@ def test_negative_invalid_id(client_api, users):
     assert body["detail"] == "Não encontrado."
 
 
-def test_negative_tutor_inactive_must_return_404(client_api, users):
+def test_negative_tutor_inactive_must_return_404(client_api_auth_tutor, users):
     pk = User.objects.filter(is_active=False).values_list("pk").first()[0]
 
     url = resolve_url(URL, pk=pk)
 
-    resp = client_api.delete(url)
+    resp = client_api_auth_tutor.delete(url)
 
     assert resp.status_code == status.HTTP_404_NOT_FOUND
 
     body = resp.json()
 
     assert body["detail"] == "Não encontrado."
+
+
+def test_negative_must_be_auth(client_api, users):
+    url = resolve_url(URL, pk=1)
+
+    resp = client_api.delete(url)
+
+    assert resp.status_code == status.HTTP_401_UNAUTHORIZED
+
+    body = resp.json()
+
+    assert body["detail"] == "As credenciais de autenticação não foram fornecidas."

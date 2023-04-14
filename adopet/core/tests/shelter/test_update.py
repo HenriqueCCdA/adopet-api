@@ -11,7 +11,7 @@ User = get_user_model()
 URL = "core:read-delete-update-shelter"
 
 
-def test_positive(client_api, users):
+def test_positive(client_api_auth_shelter, users):
     tutor = User.objects.filter(is_active=True, is_tutor=False, is_shelter=True).first()
 
     pk = tutor.pk
@@ -20,7 +20,7 @@ def test_positive(client_api, users):
 
     url = resolve_url(URL, pk=pk)
 
-    resp = client_api.patch(url, data=data)
+    resp = client_api_auth_shelter.patch(url, data=data)
 
     assert resp.status_code == status.HTTP_200_OK
 
@@ -29,10 +29,10 @@ def test_positive(client_api, users):
     assert body["name"] == "Update name"
 
 
-def test_negative_invalid_id(client_api, users):
+def test_negative_invalid_id(client_api_auth_shelter, users):
     url = resolve_url(URL, pk=444444)
 
-    resp = client_api.patch(url)
+    resp = client_api_auth_shelter.patch(url)
 
     assert resp.status_code == status.HTTP_404_NOT_FOUND
 
@@ -41,12 +41,12 @@ def test_negative_invalid_id(client_api, users):
     assert body["detail"] == "Não encontrado."
 
 
-def test_negative_shelter_inactive_must_return_404(client_api, users):
+def test_negative_shelter_inactive_must_return_404(client_api_auth_shelter, users):
     pk = User.objects.filter(is_active=False, is_shelter=True, is_tutor=False).values_list("pk").first()[0]
 
     url = resolve_url(URL, pk=pk)
 
-    resp = client_api.patch(url)
+    resp = client_api_auth_shelter.patch(url)
 
     assert resp.status_code == status.HTTP_404_NOT_FOUND
 
@@ -55,7 +55,7 @@ def test_negative_shelter_inactive_must_return_404(client_api, users):
     assert body["detail"] == "Não encontrado."
 
 
-def test_negative_email_mest_be_unique(client_api, users):
+def test_negative_email_mest_be_unique(client_api_auth_shelter, users):
     pk = User.objects.filter(is_active=True, is_tutor=False, is_shelter=True).values_list("pk").first()[0]
 
     other_tutor_email = (
@@ -66,7 +66,7 @@ def test_negative_email_mest_be_unique(client_api, users):
 
     data = {"email": other_tutor_email}
 
-    resp = client_api.patch(url, data=data)
+    resp = client_api_auth_shelter.patch(url, data=data)
 
     assert resp.status_code == status.HTTP_400_BAD_REQUEST
 
@@ -75,14 +75,14 @@ def test_negative_email_mest_be_unique(client_api, users):
     assert body["email"] == ["usuário com este Email já existe."]
 
 
-def test_negative_invalid_email(client_api, users):
+def test_negative_invalid_email(client_api_auth_shelter, users):
     pk = User.objects.filter(is_active=True, is_tutor=False, is_shelter=True).values_list("pk").first()[0]
 
     url = resolve_url(URL, pk=pk)
 
     data = {"email": "invalid@"}
 
-    resp = client_api.patch(url, data=data)
+    resp = client_api_auth_shelter.patch(url, data=data)
 
     assert resp.status_code == status.HTTP_400_BAD_REQUEST
 
@@ -91,15 +91,27 @@ def test_negative_invalid_email(client_api, users):
     assert body["email"] == ["Insira um endereço de email válido."]
 
 
-def test_negative_put_is_not_allowed(client_api, users):
+def test_negative_put_is_not_allowed(client_api_auth_shelter, users):
     pk = User.objects.filter(is_active=False, is_tutor=False, is_shelter=True).values_list("pk").first()[0]
 
     url = resolve_url(URL, pk=pk)
 
-    resp = client_api.put(url)
+    resp = client_api_auth_shelter.put(url)
 
     assert resp.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
 
     body = resp.json()
 
     assert body["detail"] == 'Method "PUT" not allowed.'
+
+
+def test_negative_must_be_auth(client_api, users):
+    url = resolve_url(URL, pk=1)
+
+    resp = client_api.patch(url)
+
+    assert resp.status_code == status.HTTP_401_UNAUTHORIZED
+
+    body = resp.json()
+
+    assert body["detail"] == "As credenciais de autenticação não foram fornecidas."

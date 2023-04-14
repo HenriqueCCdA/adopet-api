@@ -11,26 +11,26 @@ User = get_user_model()
 URL = "core:list-create-shelter"
 
 
-def test_positive_list(client_api, users):
+def test_positive_list(client_api_auth_shelter, users):
     """
     Shelter list. Return 200.
     """
 
     url = resolve_url(URL)
 
-    resp = client_api.get(url)
+    resp = client_api_auth_shelter.get(url)
 
     assert resp.status_code == status.HTTP_200_OK
 
-    tutors = User.objects.filter(is_shelter=True, is_active=True)
+    shelters = User.objects.filter(is_shelter=True, is_active=True)
 
     body = resp.json()
 
-    assert body["count"] == 6
+    assert body["count"] == len(shelters)
     assert body["next"] is None
     assert body["previous"] is None
 
-    for r, db in zip(body["results"], tutors):
+    for r, db in zip(body["results"], shelters):
         assert r["id"] == db.id
         assert r["name"] == db.name
         assert r["email"] == db.email
@@ -44,10 +44,10 @@ def test_positive_list(client_api, users):
 
 # TODO: implementar isso depois
 @pytest.mark.skip
-def test_positive_list_empty(client_api):
+def test_positive_list_empty(client_api_auth_shelter):
     url = resolve_url(URL)
 
-    resp = client_api.get(url)
+    resp = client_api_auth_shelter.get(url)
 
     assert resp.status_code == status.HTTP_200_OK
 
@@ -56,26 +56,26 @@ def test_positive_list_empty(client_api):
     assert body["detail"] == "Não encontrado"
 
 
-def test_positive_pagination(client_api, users):
+def test_positive_pagination(client_api_auth_shelter, users):
     """
     Shelter list pagination. Return 200.
     """
 
     url = resolve_url(URL)
 
-    resp = client_api.get(f"{url}?page=2&page_size=2")
+    resp = client_api_auth_shelter.get(f"{url}?page=2&page_size=2")
 
     assert resp.status_code == status.HTTP_200_OK
 
-    tutors = User.objects.filter(is_shelter=True, is_active=True)[2:4]
+    shelters = User.objects.filter(is_shelter=True, is_active=True)[2:4]
 
     body = resp.json()
 
-    assert body["count"] == 6
+    assert body["count"] == 7
     assert body["next"] == "http://testserver/abrigos/?page=3&page_size=2"
     assert body["previous"] == "http://testserver/abrigos/?page_size=2"
 
-    for r, db in zip(body["results"], tutors):
+    for r, db in zip(body["results"], shelters):
         assert r["id"] == db.id
         assert r["name"] == db.name
         assert r["email"] == db.email
@@ -87,17 +87,29 @@ def test_positive_pagination(client_api, users):
         assert r["modified_at"] == str(db.modified_at.astimezone().isoformat())
 
 
-def test_negative_invalid_page_pagination(client_api, users):
+def test_negative_invalid_page_pagination(client_api_auth_shelter, users):
     """
     Página inválida. Return 404 and 'Invalid page'.
     """
 
     url = resolve_url(URL)
 
-    resp = client_api.get(f"{url}?page=5")
+    resp = client_api_auth_shelter.get(f"{url}?page=5")
 
     assert resp.status_code == status.HTTP_404_NOT_FOUND
 
     body = resp.json()
 
     assert body["detail"] == "Página inválida."
+
+
+def test_negative_must_be_auth(client_api, users):
+    url = resolve_url(URL)
+
+    resp = client_api.get(url)
+
+    assert resp.status_code == status.HTTP_401_UNAUTHORIZED
+
+    body = resp.json()
+
+    assert body["detail"] == "As credenciais de autenticação não foram fornecidas."

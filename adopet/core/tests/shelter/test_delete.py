@@ -11,7 +11,7 @@ User = get_user_model()
 URL = "core:read-delete-update-shelter"
 
 
-def test_positive_by_id(client_api, users):
+def test_positive_by_id(client_api_auth_shelter, users):
     """
     Sotf delete: return 200 and a msg.
     """
@@ -22,7 +22,7 @@ def test_positive_by_id(client_api, users):
 
     url = resolve_url(URL, pk=pk)
 
-    resp = client_api.delete(url)
+    resp = client_api_auth_shelter.delete(url)
 
     assert resp.status_code == status.HTTP_200_OK
     shelter = User.objects.get(pk=pk)
@@ -32,14 +32,14 @@ def test_positive_by_id(client_api, users):
     assert not shelter.is_active
 
 
-def test_negative_invalid_id(client_api, users):
+def test_negative_invalid_id(client_api_auth_shelter, users):
     """
     Wrong id must return 404
     """
 
     url = resolve_url(URL, pk=404)
 
-    resp = client_api.delete(url)
+    resp = client_api_auth_shelter.delete(url)
 
     assert resp.status_code == status.HTTP_404_NOT_FOUND
 
@@ -48,7 +48,7 @@ def test_negative_invalid_id(client_api, users):
     assert body["detail"] == "Não encontrado."
 
 
-def test_negative_shelter_inactive_must_return_404(client_api, users):
+def test_negative_shelter_inactive_must_return_404(client_api_auth_shelter, users):
     """
     Inactive shelter must return 404
     """
@@ -57,10 +57,22 @@ def test_negative_shelter_inactive_must_return_404(client_api, users):
 
     url = resolve_url(URL, pk=pk)
 
-    resp = client_api.delete(url)
+    resp = client_api_auth_shelter.delete(url)
 
     assert resp.status_code == status.HTTP_404_NOT_FOUND
 
     body = resp.json()
 
     assert body["detail"] == "Não encontrado."
+
+
+def test_negative_must_be_auth(client_api, users):
+    url = resolve_url(URL, pk=1)
+
+    resp = client_api.delete(url)
+
+    assert resp.status_code == status.HTTP_401_UNAUTHORIZED
+
+    body = resp.json()
+
+    assert body["detail"] == "As credenciais de autenticação não foram fornecidas."
