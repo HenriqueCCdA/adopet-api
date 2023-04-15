@@ -37,7 +37,14 @@ class Pet(CreationModificationBase):
 
 
 class Adoption(CreationModificationBase):
-    pet = models.OneToOneField(Pet, on_delete=models.CASCADE)
+    pet = models.OneToOneField(
+        Pet,
+        limit_choices_to={
+            "is_active": True,
+            "is_adopted": False,
+        },
+        on_delete=models.CASCADE,
+    )
     # TODO: Colocar um limite para numero de adoções de um tutor
     tutor = models.ForeignKey(
         User,

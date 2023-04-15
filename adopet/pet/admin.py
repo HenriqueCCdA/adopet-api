@@ -12,6 +12,7 @@ class PetAdmin(admin.ModelAdmin):
         "age",
         "behavior",
         "is_active",
+        "is_adopted",
         "created_at",
         "modified_at",
     )
@@ -29,7 +30,6 @@ class AdoptionAdmin(admin.ModelAdmin):
         "pet",
         "tutor",
         "date",
-        "is_active",
         "created_at",
         "modified_at",
     )

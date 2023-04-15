@@ -20,7 +20,7 @@ def test_positive_by_id(client_api_auth_user, pet):
     pet.refresh_from_db()
     body = resp.json()
 
-    assert body["msg"] == "Abrigo deletado com sucesso."
+    assert body["msg"] == "Pet deletado com sucesso."
     assert not pet.is_active
 
 

@@ -66,6 +66,7 @@ class TutorRDU(RetrieveUpdateDestroyAPIView):
         return Response(data={"msg": "Tutor deletado com sucesso."}, status=status.HTTP_200_OK)
 
     def perform_destroy(self, instance):
+        """Soft delete"""
         instance.is_active = False
         instance.save()
 
@@ -104,6 +105,7 @@ class ShelterRDU(RetrieveUpdateDestroyAPIView):
         return Response(data={"msg": "Abrigo deletado com sucesso."}, status=status.HTTP_200_OK)
 
     def perform_destroy(self, instance):
+        """Soft delete"""
         instance.is_active = False
         instance.save()
 
