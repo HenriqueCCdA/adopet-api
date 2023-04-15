@@ -1,6 +1,6 @@
 FROM python:3.11.2-slim-buster
 
-ARG USER_DIR=/app
+ARG USER_DIR=/home/app
 
 # set work directory
 WORKDIR $USER_DIR
@@ -10,7 +10,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # Create the app user
-# RUN groupadd app && useradd -g app app
+RUN groupadd app && useradd -g app app && mkdir -p $USER_DIR
 
 # install depedencies for postgres
 RUN apt-get update && apt-get install -y\
@@ -30,8 +30,8 @@ RUN set -ex && \
 
 COPY . .
 
-# RUN chown -R app:app $USER_DIR
-# USER app
+RUN chown -R app:app $USER_DIR
+USER app
 
 EXPOSE 8000
 
