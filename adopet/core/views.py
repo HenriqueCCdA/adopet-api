@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from adopet.core.authentication import RegisterAuthenticated
+from adopet.core.permissions import DeleteUpdateUserObjPermission, RegisterPermission
 from adopet.core.paginators import MyPagination
 from adopet.core.serializers import AbrigoSerializer, TutorSerializer
 
@@ -32,7 +32,7 @@ class Whoami(APIView):
 
 class Version(APIView):
     def get(self, request):
-        return Response({"version": 2.0})
+        return Response({"version": 3.0})
 
 
 class TutorLC(ListCreateAPIView):
@@ -46,7 +46,7 @@ class TutorLC(ListCreateAPIView):
     queryset = User.objects.tutor()
     serializer_class = TutorSerializer
     pagination_class = MyPagination
-    permission_classes = [RegisterAuthenticated]
+    permission_classes = [RegisterPermission]
 
 
 class TutorRDU(RetrieveUpdateDestroyAPIView):
@@ -58,7 +58,7 @@ class TutorRDU(RetrieveUpdateDestroyAPIView):
 
     queryset = User.objects.tutor()
     serializer_class = TutorSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, DeleteUpdateUserObjPermission]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -85,7 +85,7 @@ class ShelterLC(ListCreateAPIView):
     queryset = User.objects.shelter()
     serializer_class = AbrigoSerializer
     pagination_class = MyPagination
-    permission_classes = [RegisterAuthenticated]
+    permission_classes = [RegisterPermission]
 
 
 class ShelterRDU(RetrieveUpdateDestroyAPIView):
@@ -97,7 +97,7 @@ class ShelterRDU(RetrieveUpdateDestroyAPIView):
 
     queryset = User.objects.shelter()
     serializer_class = AbrigoSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, DeleteUpdateUserObjPermission]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

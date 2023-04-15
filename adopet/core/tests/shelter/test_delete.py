@@ -12,9 +12,7 @@ URL = "core:read-delete-update-shelter"
 
 
 def test_positive_by_id(client_api_auth_shelter, users):
-    """
-    Sotf delete: return 200 and a msg.
-    """
+    """Sotf delete: return 200 and a msg."""
 
     shelter = User.objects.filter(is_active=True, is_tutor=False, is_shelter=True).first()
 
