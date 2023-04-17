@@ -11,10 +11,8 @@ User = get_user_model()
 URL = "core:read-delete-update-shelter"
 
 
-def test_positive_by_id(client_api_auth_shelter, users):
+def test_positive_by_id(client_api_auth_shelter, shelter):
     """Sotf delete: return 200 and a msg."""
-
-    shelter = User.objects.filter(is_active=True, is_tutor=False, is_shelter=True).first()
 
     pk = shelter.pk
 
@@ -23,7 +21,9 @@ def test_positive_by_id(client_api_auth_shelter, users):
     resp = client_api_auth_shelter.delete(url)
 
     assert resp.status_code == status.HTTP_200_OK
-    shelter = User.objects.get(pk=pk)
+
+    shelter.refresh_from_db()
+
     body = resp.json()
 
     assert body["msg"] == "Abrigo deletado com sucesso."
@@ -31,9 +31,7 @@ def test_positive_by_id(client_api_auth_shelter, users):
 
 
 def test_negative_invalid_id(client_api_auth_shelter, users):
-    """
-    Wrong id must return 404
-    """
+    """Wrong id must return 404"""
 
     url = resolve_url(URL, pk=404)
 
@@ -47,9 +45,7 @@ def test_negative_invalid_id(client_api_auth_shelter, users):
 
 
 def test_negative_shelter_inactive_must_return_404(client_api_auth_shelter, users):
-    """
-    Inactive shelter must return 404
-    """
+    """Inactive shelter must return 404"""
 
     pk = User.objects.filter(is_active=False, is_tutor=False, is_shelter=True).values_list("pk").first()[0]
 

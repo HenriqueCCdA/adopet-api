@@ -11,10 +11,8 @@ User = get_user_model()
 URL = "core:read-delete-update-shelter"
 
 
-def test_positive(client_api_auth_shelter, users):
-    tutor = User.objects.filter(is_active=True, is_tutor=False, is_shelter=True).first()
-
-    pk = tutor.pk
+def test_positive(client_api_auth_shelter, shelter):
+    pk = shelter.pk
 
     data = {"name": "Update name"}
 
@@ -29,7 +27,7 @@ def test_positive(client_api_auth_shelter, users):
     assert body["name"] == "Update name"
 
 
-def test_negative_invalid_id(client_api_auth_shelter, users):
+def test_negative_invalid_id(client_api_auth_shelter, shelter):
     url = resolve_url(URL, pk=444444)
 
     resp = client_api_auth_shelter.patch(url)
@@ -55,11 +53,18 @@ def test_negative_shelter_inactive_must_return_404(client_api_auth_shelter, user
     assert body["detail"] == "Não encontrado."
 
 
-def test_negative_email_mest_be_unique(client_api_auth_shelter, users):
-    pk = User.objects.filter(is_active=True, is_tutor=False, is_shelter=True).values_list("pk").first()[0]
+def test_negative_email_must_be_unique(client_api_auth_shelter, shelter, users):
+    pk = shelter.pk
 
     other_tutor_email = (
-        User.objects.filter(is_active=True, is_tutor=False, is_shelter=True).values_list("email").last()[0]
+        User.objects.filter(
+            is_active=True,
+            is_tutor=False,
+            is_shelter=True,
+        )
+        .exclude(id=shelter.pk)
+        .values_list("email")
+        .last()[0]
     )
 
     url = resolve_url(URL, pk=pk)
@@ -75,8 +80,8 @@ def test_negative_email_mest_be_unique(client_api_auth_shelter, users):
     assert body["email"] == ["usuário com este Email já existe."]
 
 
-def test_negative_invalid_email(client_api_auth_shelter, users):
-    pk = User.objects.filter(is_active=True, is_tutor=False, is_shelter=True).values_list("pk").first()[0]
+def test_negative_invalid_email(client_api_auth_shelter, shelter):
+    pk = shelter.pk
 
     url = resolve_url(URL, pk=pk)
 
