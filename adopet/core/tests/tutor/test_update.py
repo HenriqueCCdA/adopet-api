@@ -26,6 +26,20 @@ def test_positive(client_api_auth_tutor, tutor):
     assert body["name"] == "Update name"
 
 
+def test_negative_only_own_tutor_can_update_itself(client_api_auth_tutor, tutor, users):
+    pk = User.objects.tutor().exclude(id=tutor.pk).values_list("pk").first()[0]
+
+    url = resolve_url(URL, pk=pk)
+
+    resp = client_api_auth_tutor.patch(url)
+
+    assert resp.status_code == status.HTTP_403_FORBIDDEN
+
+    body = resp.json()
+
+    assert body["detail"] == "Você não tem permissão para executar essa ação."
+
+
 def test_negative_invalid_id(client_api_auth_tutor, users):
     url = resolve_url(URL, pk=444444)
 

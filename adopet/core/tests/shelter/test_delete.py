@@ -30,6 +30,23 @@ def test_positive_by_id(client_api_auth_shelter, shelter):
     assert not shelter.is_active
 
 
+def test_negative_only_own_shelter_can_delete_itself(client_api_auth_shelter, shelter, users):
+    pk = User.objects.shelter().exclude(id=shelter.pk).values_list("pk").first()[0]
+
+    url = resolve_url(URL, pk=pk)
+
+    resp = client_api_auth_shelter.delete(url)
+
+    assert resp.status_code == status.HTTP_403_FORBIDDEN
+
+    shelter.refresh_from_db()
+
+    body = resp.json()
+
+    assert body["detail"] == "Você não tem permissão para executar essa ação."
+    assert shelter.is_active
+
+
 def test_negative_invalid_id(client_api_auth_shelter, users):
     """Wrong id must return 404"""
 

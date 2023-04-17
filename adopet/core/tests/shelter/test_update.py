@@ -27,6 +27,20 @@ def test_positive(client_api_auth_shelter, shelter):
     assert body["name"] == "Update name"
 
 
+def test_negative_only_own_shelter_can_update_itself(client_api_auth_shelter, shelter, users):
+    pk = User.objects.shelter().exclude(id=shelter.pk).values_list("pk").first()[0]
+
+    url = resolve_url(URL, pk=pk)
+
+    resp = client_api_auth_shelter.patch(url)
+
+    assert resp.status_code == status.HTTP_403_FORBIDDEN
+
+    body = resp.json()
+
+    assert body["detail"] == "Você não tem permissão para executar essa ação."
+
+
 def test_negative_invalid_id(client_api_auth_shelter, shelter):
     url = resolve_url(URL, pk=444444)
 

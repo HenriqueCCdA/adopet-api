@@ -141,3 +141,4 @@ db
 test-result.xml
 
 docker-compose.yml
+.pdbhistory
