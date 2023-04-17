@@ -52,9 +52,3 @@ class CustomUser(CreationModificationBase, AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
-
-    def get_absolute_url(self):
-        if self.is_tutor:
-            return f"tutor/{self.pk}/"
-        if self.is_shelter:
-            return f"abrigo/{self.pk}/"
