@@ -8,6 +8,7 @@ from rest_framework.generics import (
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema
 
 from adopet.core.paginators import MyPagination
 from adopet.pet.models import Adoption, Pet
@@ -36,6 +37,7 @@ class PetRDU(RetrieveUpdateDestroyAPIView):
         instance.is_active = False
         instance.save()
 
+    @extend_schema(methods=["PUT"], exclude=True)
     def put(self, request, *args, **kwargs):
         return Response({"detail": 'Method "PUT" not allowed.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 

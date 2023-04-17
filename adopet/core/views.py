@@ -1,19 +1,21 @@
 from django.contrib.auth import get_user_model
 from rest_framework import status
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from drf_spectacular.utils import extend_schema
+
 
 from adopet.core.paginators import MyPagination
 from adopet.core.permissions import DeleteUpdateUserObjPermission, RegisterPermission
-from adopet.core.serializers import AbrigoSerializer, TutorSerializer
+from adopet.core.serializers import AbrigoSerializer, TutorSerializer, WhoamiSerializer, VersionSerializer
 
 User = get_user_model()
 
 
-class Whoami(APIView):
+class Whoami(GenericAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = WhoamiSerializer
 
     def get(self, request):
         user = request.user
@@ -27,12 +29,18 @@ class Whoami(APIView):
 
         data = {"id": user.pk, "name": user.name, "email": user.email, "role": role}
 
-        return Response(data)
+        serializer = self.get_serializer(data=data)
+
+        return Response(serializer.data)
 
 
-class Version(APIView):
+class Version(GenericAPIView):
+    serializer_class = VersionSerializer
+
     def get(self, request):
-        return Response({"version": 3.0})
+        serializer = self.get_serializer(data={"version": 3.0})
+
+        return Response(serializer.data)
 
 
 class TutorLC(ListCreateAPIView):
@@ -56,6 +64,8 @@ class TutorRDU(RetrieveUpdateDestroyAPIView):
     Need to be auth
     """
 
+    DELETE_MSG = {"msg": "Tutor deletado com sucesso."}
+
     queryset = User.objects.tutor()
     serializer_class = TutorSerializer
     permission_classes = [IsAuthenticated, DeleteUpdateUserObjPermission]
@@ -70,6 +80,7 @@ class TutorRDU(RetrieveUpdateDestroyAPIView):
         instance.is_active = False
         instance.save()
 
+    @extend_schema(methods=["PUT"], exclude=True)
     def put(self, request, *args, **kwargs):
         return Response({"detail": 'Method "PUT" not allowed.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
@@ -109,6 +120,7 @@ class ShelterRDU(RetrieveUpdateDestroyAPIView):
         instance.is_active = False
         instance.save()
 
+    @extend_schema(methods=["PUT"], exclude=True)
     def put(self, request, *args, **kwargs):
         return Response({"detail": 'Method "PUT" not allowed.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 

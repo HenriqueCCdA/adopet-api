@@ -68,3 +68,20 @@ class AbrigoSerializer(UserSerializer):  # TODO: nome em portugues
         return user
 
     # TODO: adiciona a campo pets
+
+
+class WhoamiSerializer(serializers.ModelSerializer):
+    role = serializers.CharField(max_length=10)
+
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "name",
+            "email",
+            "role",
+        )
+
+
+class VersionSerializer(serializers.Serializer):
+    version = serializers.FloatField()
