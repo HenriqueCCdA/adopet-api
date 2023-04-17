@@ -1,5 +1,10 @@
 # Adopet API
 
+![](https://img.shields.io/github/last-commit/HenriqueCCdA/adopet-api?style=plasti&ccolor=blue)
+![](https://img.shields.io/badge/Autor-Henrique%20C%20C%20de%20Andrade-blue)
+[![codecov](https://codecov.io/gh/HenriqueCCdA/adopet-api/branch/main/graph/badge.svg?token=ciUVhvgHSW)](https://codecov.io/gh/HenriqueCCdA/adopet-api)
+[![Python application](https://github.com/HenriqueCCdA/adopet-api/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/HenriqueCCdA/adopet-api/actions/workflows/CI.yml)
+
 Desafio backend 6 da alura.
 
 | :placard: Vitrine.Dev |     |
