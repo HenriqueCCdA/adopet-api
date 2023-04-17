@@ -11,8 +11,8 @@ User = get_user_model()
 URL = "core:read-delete-update-tutor"
 
 
-def test_positive_by_id(client_api_auth_tutor, users):
-    tutor = User.objects.filter(is_active=True, is_tutor=True).first()
+def test_positive_by_id(client_api_auth_tutor, tutor):
+    """Sotf delete: return 200 and a msg."""
 
     pk = tutor.pk
 
@@ -21,7 +21,9 @@ def test_positive_by_id(client_api_auth_tutor, users):
     resp = client_api_auth_tutor.delete(url)
 
     assert resp.status_code == status.HTTP_200_OK
-    tutor = User.objects.get(pk=pk)
+
+    tutor.refresh_from_db()
+
     body = resp.json()
 
     assert body["msg"] == "Tutor deletado com sucesso."

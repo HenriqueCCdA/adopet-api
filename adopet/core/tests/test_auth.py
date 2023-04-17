@@ -3,8 +3,8 @@ from unittest.mock import MagicMock
 import pytest
 from django.contrib.auth.models import AnonymousUser
 
-from adopet.core.permissions import RegisterPermission
 from adopet.core.models import CustomUser
+from adopet.core.permissions import RegisterPermission
 
 
 def test_positive_post():

@@ -8,7 +8,6 @@ class RegisterPermission(BasePermission):
     """
 
     def has_permission(self, request, view):
-
         if request.method == "POST":
             return True
 
@@ -23,7 +22,6 @@ class DeleteUpdateUserObjPermission(BasePermission):
     methods = ["DELETE", "PUT", "PATCH"]
 
     def has_object_permission(self, request, view, obj):
-
         if request.method in self.methods:
             if obj.pk == request.user.pk:
                 return True
