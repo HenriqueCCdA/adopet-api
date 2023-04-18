@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -7,7 +8,12 @@ from rest_framework.views import APIView
 
 from adopet.core.paginators import MyPagination
 from adopet.core.permissions import DeleteUpdateUserObjPermission, RegisterPermission
-from adopet.core.serializers import AbrigoSerializer, TutorSerializer
+from adopet.core.serializers import (
+    AbrigoSerializer,
+    TutorSerializer,
+    VersionSerializer,
+    WhoamiSerializer,
+)
 
 User = get_user_model()
 
@@ -15,7 +21,9 @@ User = get_user_model()
 class Whoami(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(responses=WhoamiSerializer)
     def get(self, request):
+        """Retorna o usuário que pertence o Token"""
         user = request.user
 
         role = None
@@ -27,20 +35,25 @@ class Whoami(APIView):
 
         data = {"id": user.pk, "name": user.name, "email": user.email, "role": role}
 
-        return Response(data)
+        serialize = WhoamiSerializer(instance=data)
+
+        return Response(serialize.data)
 
 
 class Version(APIView):
+    @extend_schema(responses=VersionSerializer)
     def get(self, request):
-        return Response({"version": 3.0})
+        """Versão da api"""
+
+        serialize = VersionSerializer(instance={"version": 1.0})
+
+        return Response(serialize.data)
 
 
 class TutorLC(ListCreateAPIView):
     """
-    View for Create or List a Tutor
-
-    POST: Register new tutor. Not need to be auth
-    GET: List tutors. Need to be auth
+    POST Register new tutor not need to be auth
+    GET: List tutors need to be auth
     """
 
     queryset = User.objects.tutor()
@@ -50,11 +63,9 @@ class TutorLC(ListCreateAPIView):
 
 
 class TutorRDU(RetrieveUpdateDestroyAPIView):
-    """
-    View for Read, Delete and Update a Tutor
+    """Read, Delete and Update a Tutor need to be auth."""
 
-    Need to be auth
-    """
+    DELETE_MSG = {"msg": "Tutor deletado com sucesso."}
 
     queryset = User.objects.tutor()
     serializer_class = TutorSerializer
@@ -70,16 +81,15 @@ class TutorRDU(RetrieveUpdateDestroyAPIView):
         instance.is_active = False
         instance.save()
 
+    @extend_schema(methods=["PUT"], exclude=True)
     def put(self, request, *args, **kwargs):
         return Response({"detail": 'Method "PUT" not allowed.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 class ShelterLC(ListCreateAPIView):
     """
-    View for Create or List a shelter
-
-    POST: Register new shelter. Not need to be auth
-    GET: List shelters. Need to be auth
+    POST: Register new shelter not need to be auth
+    GET: List shelters need to be auth
     """
 
     queryset = User.objects.shelter()
@@ -89,11 +99,7 @@ class ShelterLC(ListCreateAPIView):
 
 
 class ShelterRDU(RetrieveUpdateDestroyAPIView):
-    """
-    View for Read, Delete and Update a shelter
-
-    Need to be auth
-    """
+    """Read, Delete and Update a shelter need to be auth."""
 
     queryset = User.objects.shelter()
     serializer_class = AbrigoSerializer
@@ -109,6 +115,7 @@ class ShelterRDU(RetrieveUpdateDestroyAPIView):
         instance.is_active = False
         instance.save()
 
+    @extend_schema(methods=["PUT"], exclude=True)
     def put(self, request, *args, **kwargs):
         return Response({"detail": 'Method "PUT" not allowed.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 

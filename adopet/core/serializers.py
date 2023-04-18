@@ -23,7 +23,12 @@ class UserSerializer(serializers.ModelSerializer):
             "created_at",
             "modified_at",
         )
-        extra_kwargs = {"password": {"write_only": True}}
+        extra_kwargs = {
+            "password": {"write_only": True},
+            "is_active": {"read_only": True},
+            "is_tutor": {"read_only": True},
+            "is_shelter": {"read_only": True},
+        }
 
     def create(self, validate_data):
         user = User.objects.create_user(
@@ -68,3 +73,25 @@ class AbrigoSerializer(UserSerializer):  # TODO: nome em portugues
         return user
 
     # TODO: adiciona a campo pets
+
+
+class WhoamiSerializer(serializers.ModelSerializer):
+    role = serializers.CharField(max_length=10)
+
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "name",
+            "email",
+            "role",
+        )
+        extra_kwargs = {
+            "name": {"read_only": True},
+            "email": {"read_only": True},
+            "role": {"read_only": True},
+        }
+
+
+class VersionSerializer(serializers.Serializer):
+    version = serializers.FloatField(read_only=True)

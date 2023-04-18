@@ -16,6 +16,8 @@ ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
 AUTH_USER_MODEL = "core.CustomUser"
 
+DOC_API = config("DOC_API", cast=bool, default=False)
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -25,14 +27,18 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django_extensions",
     #
+    "django_extensions",
     "rest_framework",
     "rest_framework.authtoken",
     #
     "adopet.core",
     "adopet.pet",
 ]
+
+if DOC_API:
+    INSTALLED_APPS.append("drf_spectacular")
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -117,4 +123,15 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.JSONRenderer",
+    ],
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Adopet API",
+    "DESCRIPTION": "API da plataforma adopet",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }

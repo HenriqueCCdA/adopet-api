@@ -1,4 +1,5 @@
 from django.db import transaction
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import (
     CreateAPIView,
@@ -36,6 +37,7 @@ class PetRDU(RetrieveUpdateDestroyAPIView):
         instance.is_active = False
         instance.save()
 
+    @extend_schema(methods=["PUT"], exclude=True)
     def put(self, request, *args, **kwargs):
         return Response({"detail": 'Method "PUT" not allowed.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
@@ -47,9 +49,7 @@ class AdoptionC(CreateAPIView):
 
 
 class AdoptionRD(RetrieveDestroyAPIView):
-    """
-    Only shelter can delete a adoption
-    """
+    """Only shelter can delete a adoption"""
 
     queryset = Adoption.objects.all()
     serializer_class = AdoptionSerializer
