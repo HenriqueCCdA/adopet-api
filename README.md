@@ -10,7 +10,7 @@ Desafio backend 6 da alura.
 | :placard: Vitrine.Dev |     |
 | -------------  | --- |
 | :sparkles: Nome        | `Apopet Api`
-| :label: Tecnologias | `Django Rest Framework`, `Python`, `Postgres`, `Pytest`
+| :label: Tecnologias | `Django Rest Framework`, `Python`, `Postgres`, `Pytest`, `Docker`, `swagger`
 | :rocket: URL         |
 | :fire: Desafio     | https://www.alura.com.br/challenges/back-end
 
@@ -18,6 +18,8 @@ Desafio backend 6 da alura.
 ## Documantação da API
 
 [Postman](https://documenter.getpostman.com/view/18852890/2s93RRvsgF)
+
+A documentação da API (swagger) esta disponível na rota `/docs/`. Portanto localmente `http://localhost:8000/docs/`.
 
 
 ## Variaveis de ambiente
@@ -31,12 +33,12 @@ DEBUG=True
 SECRET_KEY=Sua_chave_secreta_aqui!
 ALLOWED_HOSTS=127.0.0.1,localhost
 DATABASE_URL=postgres://adopet_user:123456@localhost:5432/adopet_user
+DOC_API=True
 ```
-
 
 ## Rodando o projeto via docker.
 
-Você precisa primeiro compiar o docker compose de desenvolvimento para a raiz do projeto
+Você precisa primeiro cmpiar o docker compose de desenvolvimento para a raiz do projeto
 
 ```console
 cp docker/docker-compose.dev.yml docker-compose.yml
@@ -50,7 +52,7 @@ make docker_build_and_up
 
 A aplicação ficará disponivel em `http://localhost:8000/`
 
-Todas as variaveis de ambiente são as definida no arquivo `.env` exceto o `DATABASE_URL` que é sobrescrito dentro do docker compose. Além disso foi utilizazndo `PYTHONBREAKPOINT=ipdb.set_trace` portanto para usar é necessario usar o `pytest` com `-s` caso você queria usar `breakpoints`.
+Todas as variaveis de ambiente usadas no conteiner são as definida no arquivo `.env` exceto o `DATABASE_URL` que é sobrescrito dentro do docker compose. Além disso foi utilizazndo `PYTHONBREAKPOINT=ipdb.set_trace` portanto é necessario usar o `pytest` com `-s` caso você queria usar `breakpoints`.
 
 ### Outros comandos
 

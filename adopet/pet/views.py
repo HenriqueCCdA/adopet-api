@@ -1,4 +1,5 @@
 from django.db import transaction
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import (
     CreateAPIView,
@@ -8,7 +9,6 @@ from rest_framework.generics import (
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from drf_spectacular.utils import extend_schema
 
 from adopet.core.paginators import MyPagination
 from adopet.pet.models import Adoption, Pet
@@ -49,9 +49,7 @@ class AdoptionC(CreateAPIView):
 
 
 class AdoptionRD(RetrieveDestroyAPIView):
-    """
-    Only shelter can delete a adoption
-    """
+    """Only shelter can delete a adoption"""
 
     queryset = Adoption.objects.all()
     serializer_class = AdoptionSerializer
