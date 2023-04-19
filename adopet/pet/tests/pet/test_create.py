@@ -13,7 +13,8 @@ URL = "pet:list-create"
 def test_positive(client_api_auth_user, create_pet_payload):
     url = resolve_url(URL)
 
-    resp = client_api_auth_user.post(url, data=create_pet_payload)
+    resp = client_api_auth_user.post(url, data=create_pet_payload, format="multipart")
+
     assert resp.status_code == status.HTTP_201_CREATED
 
     pet = Pet.objects.first()
@@ -25,6 +26,7 @@ def test_positive(client_api_auth_user, create_pet_payload):
     assert body["age"] == pet.age
     assert body["behavior"] == pet.behavior
     assert body["shelter"] == pet.shelter.pk
+    assert body["photo"] == f"http://testserver{pet.photo.url}"
     assert not body["is_adopted"]
     assert body["created_at"] == str(pet.created_at.astimezone().isoformat())
     assert body["modified_at"] == str(pet.modified_at.astimezone().isoformat())

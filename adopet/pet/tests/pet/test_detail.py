@@ -27,6 +27,7 @@ def test_positive_get_by_id(client_api_auth_user, pet):
     assert body["age"] == pet.age
     assert body["behavior"] == pet.behavior
     assert body["shelter"] == pet.shelter.pk
+    assert body["photo"] == "http://testserver" + pet.photo.url
     assert not body["is_adopted"]
     assert body["created_at"] == str(pet.created_at.astimezone().isoformat())
     assert body["modified_at"] == str(pet.modified_at.astimezone().isoformat())

@@ -8,6 +8,10 @@ from adopet.core.models import CustomUser as User
 class UserAdmin(UserAdmin):
     fieldsets = (
         (
+            None,
+            {"fields": ("id",)},
+        ),
+        (
             _("User data"),
             {
                 "fields": (
