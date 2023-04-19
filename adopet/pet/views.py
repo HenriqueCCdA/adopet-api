@@ -7,6 +7,7 @@ from rest_framework.generics import (
     RetrieveDestroyAPIView,
     RetrieveUpdateDestroyAPIView,
 )
+from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -20,6 +21,7 @@ class PetLC(ListCreateAPIView):
     serializer_class = PetSerializer
     pagination_class = MyPagination
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser]
 
 
 class PetRDU(RetrieveUpdateDestroyAPIView):

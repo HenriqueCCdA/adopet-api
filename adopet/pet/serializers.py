@@ -16,6 +16,7 @@ class PetSerializer(serializers.ModelSerializer):
             "age",
             "behavior",
             "shelter",
+            "photo",
             "url",
             "is_adopted",
             "created_at",

@@ -29,6 +29,7 @@ def test_positive_list(client_api_auth_user, pets):
         assert r["size"] == db.size
         assert r["age"] == db.age
         assert r["behavior"] == db.behavior
+        assert r["photo"] == "http://testserver" + db.photo.url
         assert r["shelter"] == db.shelter.pk
         assert r["is_adopted"] == db.is_adopted
         assert r["created_at"] == str(db.created_at.astimezone().isoformat())
@@ -56,6 +57,7 @@ def test_positive_pagination(client_api_auth_user, pets):
         assert r["size"] == db.size
         assert r["age"] == db.age
         assert r["behavior"] == db.behavior
+        assert r["photo"] == "http://testserver" + db.photo.url
         assert r["shelter"] == db.shelter.pk
         assert r["is_adopted"] == db.is_adopted
         assert r["created_at"] == str(db.created_at.astimezone().isoformat())

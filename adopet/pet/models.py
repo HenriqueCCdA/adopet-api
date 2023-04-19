@@ -1,7 +1,12 @@
 from django.db import models
+from django.utils.html import mark_safe
 
 from adopet.core.models import CreationModificationBase
 from adopet.core.models import CustomUser as User
+
+
+def upload_to(instance, filename):
+    return f"photos/{filename}"
 
 
 class Pet(CreationModificationBase):
@@ -14,6 +19,7 @@ class Pet(CreationModificationBase):
     size = models.CharField("Porte", max_length=1, choices=Size.choices)
     age = models.PositiveSmallIntegerField("Idade")
     behavior = models.CharField("Comportamento", max_length=100)
+    photo = models.ImageField("Foto", upload_to=upload_to, blank=True, null=True)
 
     shelter = models.ForeignKey(
         User,
@@ -34,6 +40,11 @@ class Pet(CreationModificationBase):
 
     def __str__(self):
         return self.name
+
+    def photo_tag(self):
+        return mark_safe(f'<img src="{self.photo.url}" width="150" height="150" />')
+
+    photo_tag.short_description = "photo"
 
 
 class Adoption(CreationModificationBase):

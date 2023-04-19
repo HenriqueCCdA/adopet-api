@@ -19,6 +19,7 @@ def test_positive_serialization_objs_list(pets):
         assert data["age"] == db.age
         assert data["behavior"] == db.behavior
         assert data["shelter"] == db.shelter.pk
+        assert data["photo"] == f"http://testserver{db.photo.url}"
         assert data["is_adopted"] == db.is_adopted
         assert data["created_at"] == str(db.created_at.astimezone().isoformat())
         assert data["modified_at"] == str(db.modified_at.astimezone().isoformat())
@@ -37,6 +38,7 @@ def test_positive_serialization_one_obj(pet):
     assert data["age"] == pet.age
     assert data["behavior"] == pet.behavior
     assert data["shelter"] == pet.shelter.pk
+    assert data["photo"] == f"http://testserver{pet.photo.url}"
     assert data["is_adopted"] == pet.is_adopted
     assert data["created_at"] == str(pet.created_at.astimezone().isoformat())
     assert data["modified_at"] == str(pet.modified_at.astimezone().isoformat())

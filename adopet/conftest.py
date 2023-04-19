@@ -10,6 +10,11 @@ fake = Faker()
 User = get_user_model()
 
 
+@pytest.fixture(autouse=True)
+def mediafiles(settings, tmp_path):
+    settings.MEDIA_ROOT = tmp_path / "media"
+
+
 @pytest.fixture
 def client_api():
     return APIClient()
