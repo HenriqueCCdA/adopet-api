@@ -12,7 +12,7 @@ URL = "core:read-delete-update-tutor"
 
 
 def test_positive_get_by_id(client_api_auth_tutor, users):
-    tutor = User.objects.filter(is_active=True, is_tutor=True).first()
+    tutor = User.objects.tutor().first()
 
     pk = tutor.pk
 
@@ -28,8 +28,7 @@ def test_positive_get_by_id(client_api_auth_tutor, users):
     assert body["id"] == tutor.id
     assert body["name"] == tutor.name
     assert body["email"] == tutor.email
-    assert body["is_tutor"]
-    assert not body["is_shelter"]
+    assert body["role"] == "T"
     assert body["is_active"]
     assert body["created_at"] == str(tutor.created_at.astimezone().isoformat())
     assert body["modified_at"] == str(tutor.modified_at.astimezone().isoformat())
@@ -48,7 +47,7 @@ def test_negative_invalid_id(client_api_auth_tutor, users):
 
 
 def test_negative_tutor_inactive_must_return_404(client_api_auth_tutor, users):
-    pk = User.objects.filter(is_active=False, is_tutor=True).values_list("pk").first()[0]
+    pk = User.objects.filter(is_active=False, role=User.Role.TUTOR).values_list("pk").first()[0]
 
     url = resolve_url(URL, pk=pk)
 

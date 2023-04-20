@@ -26,12 +26,7 @@ class UserAdmin(UserAdmin):
         ),
         (
             _("User type"),
-            {
-                "fields": (
-                    "is_tutor",
-                    "is_shelter",
-                )
-            },
+            {"fields": ("role",)},
         ),
         (
             _("Permissions"),
@@ -64,15 +59,13 @@ class UserAdmin(UserAdmin):
         "email",
         "is_staff",
         "is_active",
-        "is_tutor",
-        "is_shelter",
+        "role",
         "created_at",
         "modified_at",
     )
     list_filter = (
         "is_active",
-        "is_tutor",
-        "is_shelter",
+        "role",
     )
 
     readonly_fields = (

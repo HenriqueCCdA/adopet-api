@@ -20,7 +20,7 @@ def test_positive_whoami_tutor(client_api_auth_tutor, tutor):
         "id": tutor.pk,
         "name": tutor.name,
         "email": tutor.email,
-        "role": "tutor",
+        "role": "Tutor",
     }
 
 
@@ -36,7 +36,7 @@ def test_positive_whoami_shelter(client_api_auth_shelter, shelter):
         "id": shelter.pk,
         "name": shelter.name,
         "email": shelter.email,
-        "role": "shelter",
+        "role": "Abrigo",
     }
 
 

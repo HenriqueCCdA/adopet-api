@@ -18,7 +18,7 @@ def test_positive_list(client_api_auth_tutor, users):
 
     assert resp.status_code == status.HTTP_200_OK
 
-    tutors = User.objects.filter(is_tutor=True, is_active=True)
+    tutors = User.objects.tutor()
 
     body = resp.json()
 
@@ -30,8 +30,7 @@ def test_positive_list(client_api_auth_tutor, users):
         assert r["id"] == db.id
         assert r["name"] == db.name
         assert r["email"] == db.email
-        assert r["is_tutor"]
-        assert not r["is_shelter"]
+        assert r["role"] == "T"
         assert r["is_active"]
         assert r["created_at"] == str(db.created_at.astimezone().isoformat())
         assert r["modified_at"] == str(db.modified_at.astimezone().isoformat())
@@ -44,7 +43,7 @@ def test_positive_pagination(client_api_auth_tutor, users):
 
     assert resp.status_code == status.HTTP_200_OK
 
-    tutors = User.objects.filter(is_tutor=True, is_active=True)[2:4]
+    tutors = User.objects.tutor()[2:4]
 
     body = resp.json()
 
@@ -56,8 +55,7 @@ def test_positive_pagination(client_api_auth_tutor, users):
         assert r["id"] == db.id
         assert r["name"] == db.name
         assert r["email"] == db.email
-        assert r["is_tutor"]
-        assert not r["is_shelter"]
+        assert r["role"] == "T"
         assert r["is_active"]
         assert r["created_at"] == str(db.created_at.astimezone().isoformat())
         assert r["modified_at"] == str(db.modified_at.astimezone().isoformat())

@@ -15,8 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
             "name",
             "email",
             "is_active",
-            "is_tutor",
-            "is_shelter",
+            "role",
             "password",
             "password2",
             "url",
@@ -25,9 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
         )
         extra_kwargs = {
             "password": {"write_only": True},
-            "is_active": {"read_only": True},
-            "is_tutor": {"read_only": True},
-            "is_shelter": {"read_only": True},
+            "role": {"read_only": True},
         }
 
     def create(self, validate_data):
@@ -56,7 +53,7 @@ class TutorSerializer(UserSerializer):
 
     def create(self, validate_data):
         user = super().create(validate_data)
-        user.is_tutor = True
+        user.role = User.Role.TUTOR
         user.save()
         Token.objects.create(user=user)
         return user
@@ -67,7 +64,7 @@ class AbrigoSerializer(UserSerializer):  # TODO: nome em portugues
 
     def create(self, validate_data):
         user = super().create(validate_data)
-        user.is_shelter = True
+        user.role = User.Role.SHELTER
         user.save()
         Token.objects.create(user=user)
         return user

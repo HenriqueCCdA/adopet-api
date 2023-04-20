@@ -13,14 +13,13 @@ def test_positive_create_user(user):
 def test_positive_create_superuser(superuser):
     assert superuser.is_staff
     assert superuser.is_superuser
-    assert not superuser.is_tutor
+    assert not superuser.role
 
 
 def test_positive_default(user):
     assert not user.is_staff
     assert user.is_active
-    assert not user.is_tutor
-    assert not user.is_shelter
+    assert not user.role
 
 
 def test_create_at_and_modified_at(user):

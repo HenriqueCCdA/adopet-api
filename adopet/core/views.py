@@ -26,14 +26,7 @@ class Whoami(APIView):
         """Retorna o usuário que pertence o Token"""
         user = request.user
 
-        role = None
-
-        if user.is_tutor:
-            role = "tutor"
-        elif user.is_shelter:
-            role = "shelter"
-
-        data = {"id": user.pk, "name": user.name, "email": user.email, "role": role}
+        data = {"id": user.pk, "name": user.name, "email": user.email, "role": user.get_role_display()}
 
         serialize = WhoamiSerializer(instance=data)
 

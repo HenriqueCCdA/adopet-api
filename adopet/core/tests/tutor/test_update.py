@@ -53,7 +53,7 @@ def test_negative_invalid_id(client_api_auth_tutor, users):
 
 
 def test_negative_tutor_inactive_must_return_404(client_api_auth_tutor, users):
-    pk = User.objects.filter(is_active=False, is_tutor=True, is_shelter=False).values_list("pk").first()[0]
+    pk = User.objects.filter(is_active=False, role=User.Role.TUTOR).values_list("pk").first()[0]
 
     url = resolve_url(URL, pk=pk)
 
@@ -69,16 +69,7 @@ def test_negative_tutor_inactive_must_return_404(client_api_auth_tutor, users):
 def test_negative_email_must_be_unique(client_api_auth_tutor, tutor, users):
     pk = tutor.pk
 
-    other_tutor_email = (
-        User.objects.filter(
-            is_active=True,
-            is_tutor=True,
-            is_shelter=False,
-        )
-        .exclude(id=tutor.pk)
-        .values_list("email")
-        .last()[0]
-    )
+    other_tutor_email = User.objects.tutor().exclude(id=tutor.pk).values_list("email").last()[0]
 
     url = resolve_url(URL, pk=pk)
 
@@ -110,7 +101,7 @@ def test_negative_invalid_email(client_api_auth_tutor, tutor):
 
 
 def test_negative_put_is_not_allowed(client_api_auth_tutor, users):
-    pk = User.objects.filter(is_active=False, is_tutor=True).values_list("pk").first()[0]
+    pk = User.objects.tutor().values_list("pk").first()[0]
 
     url = resolve_url(URL, pk=pk)
 

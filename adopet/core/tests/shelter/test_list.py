@@ -22,7 +22,7 @@ def test_positive_list(client_api_auth_shelter, users):
 
     assert resp.status_code == status.HTTP_200_OK
 
-    shelters = User.objects.filter(is_shelter=True, is_active=True)
+    shelters = User.objects.shelter()
 
     body = resp.json()
 
@@ -34,8 +34,7 @@ def test_positive_list(client_api_auth_shelter, users):
         assert r["id"] == db.id
         assert r["name"] == db.name
         assert r["email"] == db.email
-        assert not r["is_tutor"]
-        assert r["is_shelter"]
+        assert r["role"] == "S"
         assert r["is_active"]
         assert r["url"] == f"http://testserver/abrigos/{db.pk}/"
         assert r["created_at"] == str(db.created_at.astimezone().isoformat())
@@ -67,7 +66,7 @@ def test_positive_pagination(client_api_auth_shelter, users):
 
     assert resp.status_code == status.HTTP_200_OK
 
-    shelters = User.objects.filter(is_shelter=True, is_active=True)[2:4]
+    shelters = User.objects.shelter()[2:4]
 
     body = resp.json()
 
@@ -80,8 +79,7 @@ def test_positive_pagination(client_api_auth_shelter, users):
         assert r["name"] == db.name
         assert r["email"] == db.email
         assert r["url"] == f"http://testserver/abrigos/{db.pk}/"
-        assert not r["is_tutor"]
-        assert r["is_shelter"]
+        assert r["role"] == "S"
         assert r["is_active"]
         assert r["created_at"] == str(db.created_at.astimezone().isoformat())
         assert r["modified_at"] == str(db.modified_at.astimezone().isoformat())

@@ -26,9 +26,8 @@ class Pet(CreationModificationBase):
         related_name="pets",
         on_delete=models.CASCADE,
         limit_choices_to={
-            "is_shelter": True,
+            "role": User.Role.SHELTER,
             "is_active": True,
-            "is_tutor": False,
         },
     )
 
@@ -62,9 +61,8 @@ class Adoption(CreationModificationBase):
         related_name="adoptions",
         on_delete=models.CASCADE,
         limit_choices_to={
-            "is_shelter": False,
+            "role": User.Role.TUTOR,
             "is_active": True,
-            "is_tutor": True,
         },
     )
     date = models.DateField("Data")

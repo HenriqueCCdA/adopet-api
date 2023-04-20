@@ -14,6 +14,7 @@ def test_positive(client_api_auth_user, create_adoption_payload):
     url = resolve_url(URL)
 
     resp = client_api_auth_user.post(url, data=create_adoption_payload)
+
     assert resp.status_code == status.HTTP_201_CREATED
 
     adoption = Adoption.objects.first()
@@ -73,26 +74,12 @@ def test_negative_tutor_must_have_active_equal_to_true(client_api_auth_user, cre
     assert resp.status_code == status.HTTP_400_BAD_REQUEST
 
 
-def test_negative_tutor_must_have_is_tutor_equal_to_true(client_api_auth_user, create_adoption_payload, tutor):
+def test_negative_tutor_must_have_role_equal_to_T(client_api_auth_user, create_adoption_payload, tutor):
     data = create_adoption_payload.copy()
 
     url = resolve_url(URL)
 
-    tutor.is_tutor = False
-    tutor.save()
-
-    data["tutor"] = tutor.pk
-
-    resp = client_api_auth_user.post(url, data=data)
-    assert resp.status_code == status.HTTP_400_BAD_REQUEST
-
-
-def test_negative_tutor_must_have_is_shelter_equal_to_false(client_api_auth_user, create_adoption_payload, tutor):
-    data = create_adoption_payload.copy()
-
-    url = resolve_url(URL)
-
-    tutor.is_shelter = True
+    tutor.role = "S"
     tutor.save()
 
     data["tutor"] = tutor.pk

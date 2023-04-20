@@ -64,7 +64,7 @@ def test_negative_invalid_id(client_api_auth_shelter, users):
 def test_negative_shelter_inactive_must_return_404(client_api_auth_shelter, users):
     """Inactive shelter must return 404"""
 
-    pk = User.objects.filter(is_active=False, is_tutor=False, is_shelter=True).values_list("pk").first()[0]
+    pk = User.objects.filter(is_active=False, role=User.Role.SHELTER).values_list("pk").first()[0]
 
     url = resolve_url(URL, pk=pk)
 

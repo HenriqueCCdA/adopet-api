@@ -23,12 +23,12 @@ def pet_photo():
 
 @pytest.fixture
 def shelter():
-    return baker.make(User, is_shelter=True, is_active=True)
+    return baker.make(User, role=User.Role.SHELTER, is_active=True)
 
 
 @pytest.fixture
 def tutor():
-    return baker.make(User, is_tutor=True, is_active=True)
+    return baker.make(User, role=User.Role.TUTOR, is_active=True)
 
 
 @pytest.fixture
