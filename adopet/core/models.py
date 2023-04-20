@@ -21,14 +21,17 @@ class CustomUser(CreationModificationBase, AbstractBaseUser, PermissionsMixin):
     Email and password are required. Other fields are optional.
     """
 
+    class Role(models.TextChoices):
+        TUTOR = "T", "Tutor"
+        SHELTER = "S", "Abrigo"
+
     name = models.CharField("Nome completo", max_length=120)
     email = models.EmailField("Email", unique=True)
 
     is_staff = models.BooleanField("staff status", default=False)
     is_active = models.BooleanField("Ativo", default=True)
 
-    is_tutor = models.BooleanField("Tutor", default=False)
-    is_shelter = models.BooleanField("Abrigo", default=False)
+    role = models.CharField("Cargos", max_length=1, choices=Role.choices, null=True, blank=True)
 
     objects = UserManager()
 

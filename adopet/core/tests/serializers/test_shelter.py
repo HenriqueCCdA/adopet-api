@@ -16,7 +16,7 @@ def test_positive_create(create_tutor_payload):
     shelter = serializer.save()
     assert User.objects.exists()
     assert Token.objects.get(user=shelter)
-    assert shelter.is_shelter
+    assert shelter.role == User.Role.SHELTER
 
 
 def test_positive_serialization_objs_list(users):

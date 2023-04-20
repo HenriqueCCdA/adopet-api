@@ -11,6 +11,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from adopet.core.models import CustomUser as User
 from adopet.core.paginators import MyPagination
 from adopet.pet.models import Adoption, Pet
 from adopet.pet.serializers import AdoptionSerializer, PetSerializer
@@ -58,7 +59,7 @@ class AdoptionRD(RetrieveDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def destroy(self, request, *args, **kwargs):
-        if request.user.is_tutor:
+        if request.user.role == User.Role.TUTOR:
             return Response(status=status.HTTP_403_FORBIDDEN)
 
         instance = self.get_object()

@@ -54,7 +54,7 @@ def test_negative_invalid_id(client_api_auth_shelter, shelter):
 
 
 def test_negative_shelter_inactive_must_return_404(client_api_auth_shelter, users):
-    pk = User.objects.filter(is_active=False, is_shelter=True, is_tutor=False).values_list("pk").first()[0]
+    pk = User.objects.filter(is_active=False, role=User.Role.SHELTER).values_list("pk").first()[0]
 
     url = resolve_url(URL, pk=pk)
 
@@ -70,16 +70,7 @@ def test_negative_shelter_inactive_must_return_404(client_api_auth_shelter, user
 def test_negative_email_must_be_unique(client_api_auth_shelter, shelter, users):
     pk = shelter.pk
 
-    other_tutor_email = (
-        User.objects.filter(
-            is_active=True,
-            is_tutor=False,
-            is_shelter=True,
-        )
-        .exclude(id=shelter.pk)
-        .values_list("email")
-        .last()[0]
-    )
+    other_tutor_email = User.objects.shelter().exclude(id=shelter.pk).values_list("email").last()[0]
 
     url = resolve_url(URL, pk=pk)
 
@@ -111,7 +102,7 @@ def test_negative_invalid_email(client_api_auth_shelter, shelter):
 
 
 def test_negative_put_is_not_allowed(client_api_auth_shelter, users):
-    pk = User.objects.filter(is_active=False, is_tutor=False, is_shelter=True).values_list("pk").first()[0]
+    pk = User.objects.filter(is_active=False, role=User.Role.SHELTER).values_list("pk").first()[0]
 
     url = resolve_url(URL, pk=pk)
 

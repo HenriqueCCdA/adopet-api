@@ -8,11 +8,11 @@ class UserQuerySet(models.QuerySet):
         self.quetyset = None
 
     def tutor(self, all):
-        self.queryset = self.filter(is_tutor=True, is_shelter=False)
+        self.queryset = self.filter(role=self.model.Role.TUTOR)
         return self._queryset_all(all)
 
     def shelter(self, all):
-        self.queryset = self.filter(is_tutor=False, is_shelter=True)
+        self.queryset = self.filter(role=self.model.Role.SHELTER)
         return self._queryset_all(all)
 
     def _queryset_all(self, all):

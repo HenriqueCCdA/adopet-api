@@ -16,7 +16,7 @@ def test_positive_create(create_tutor_payload):
     tutor = serializer.save()
     assert User.objects.exists()
     assert Token.objects.get(user=tutor)
-    assert tutor.is_tutor
+    assert tutor.role == User.Role.TUTOR
 
 
 def test_positive_serialization_objs_list(users):

@@ -24,8 +24,7 @@ def test_positive(client_api, create_tutor_payload):
     assert body["id"] == tutor.id
     assert body["name"] == tutor.name
     assert body["email"] == tutor.email
-    assert body["is_tutor"]
-    assert not body["is_shelter"]
+    assert body["role"] == "T"
     assert body["is_active"]
     assert body["created_at"] == str(tutor.created_at.astimezone().isoformat())
     assert body["modified_at"] == str(tutor.modified_at.astimezone().isoformat())

@@ -24,8 +24,7 @@ def test_positive(client_api, create_abrigo_payload):
     assert body["id"] == tutor.id
     assert body["name"] == tutor.name
     assert body["email"] == tutor.email
-    assert not body["is_tutor"]
-    assert body["is_shelter"]
+    assert body["role"] == "S"
     assert body["is_active"]
     assert body["created_at"] == str(tutor.created_at.astimezone().isoformat())
     assert body["modified_at"] == str(tutor.modified_at.astimezone().isoformat())

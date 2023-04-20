@@ -32,10 +32,10 @@ def superuser(db):
 
 @pytest.fixture()
 def users(superuser):
-    baker.make(User, _quantity=5, is_tutor=True)
-    baker.make(User, _quantity=5, is_tutor=True, is_active=False)
-    baker.make(User, _quantity=6, is_shelter=True)
-    baker.make(User, _quantity=7, is_shelter=True, is_active=False)
+    baker.make(User, _quantity=5, role=User.Role.TUTOR)
+    baker.make(User, _quantity=5, role=User.Role.TUTOR, is_active=False)
+    baker.make(User, _quantity=6, role=User.Role.SHELTER)
+    baker.make(User, _quantity=7, role=User.Role.SHELTER, is_active=False)
 
     return User.objects.all()
 
@@ -70,7 +70,7 @@ def tutor():
         name=fake.name(),
         email=fake.email(),
         password=fake.password(),
-        is_tutor=True,
+        role=User.Role.TUTOR,
     )
 
 
@@ -91,7 +91,7 @@ def shelter():
         name=fake.name(),
         email=fake.email(),
         password=fake.password(),
-        is_shelter=True,
+        role=User.Role.SHELTER,
     )
 
 
