@@ -3,13 +3,13 @@ from django.test import RequestFactory
 from rest_framework.authtoken.models import Token
 
 from adopet.core.models import CustomUser as User
-from adopet.core.serializers import AbrigoSerializer
+from adopet.core.serializers import ShelterSerializer
 
 pytestmark = pytest.mark.django_db
 
 
 def test_positive_create(create_tutor_payload):
-    serializer = AbrigoSerializer(data=create_tutor_payload)
+    serializer = ShelterSerializer(data=create_tutor_payload)
 
     assert serializer.is_valid()
 
@@ -22,7 +22,7 @@ def test_positive_create(create_tutor_payload):
 def test_positive_serialization_objs_list(users):
     request = RequestFactory().request()
 
-    serializer = AbrigoSerializer(instance=User.objects.all(), many=True, context={"request": request})
+    serializer = ShelterSerializer(instance=User.objects.all(), many=True, context={"request": request})
 
     for data, db in zip(serializer.data, users):
         assert data["id"] == db.id
@@ -40,7 +40,7 @@ def test_positive_serialization_one_obj(users):
 
     request = RequestFactory().request()
 
-    serializer = AbrigoSerializer(instance=shelter, context={"request": request})
+    serializer = ShelterSerializer(instance=shelter, context={"request": request})
 
     data = serializer.data
 

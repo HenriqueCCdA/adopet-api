@@ -7,7 +7,7 @@ from adopet.pet.models import Pet
 pytestmark = pytest.mark.django_db
 
 
-URL = "pet:read-delete-update"
+URL = "pet:read-delete-update-pet"
 
 
 def test_positive(client_api_auth_user, pet):
