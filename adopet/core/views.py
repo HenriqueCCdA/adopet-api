@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from adopet.core.paginators import MyPagination
 from adopet.core.permissions import DeleteUpdateUserObjPermission, RegisterPermission
 from adopet.core.serializers import (
-    AbrigoSerializer,
+    ShelterSerializer,
     TutorSerializer,
     VersionSerializer,
     WhoamiSerializer,
@@ -86,7 +86,7 @@ class ShelterLC(ListCreateAPIView):
     """
 
     queryset = User.objects.shelter()
-    serializer_class = AbrigoSerializer
+    serializer_class = ShelterSerializer
     pagination_class = MyPagination
     permission_classes = [RegisterPermission]
 
@@ -95,7 +95,7 @@ class ShelterRDU(RetrieveUpdateDestroyAPIView):
     """Read, Delete and Update a shelter need to be auth."""
 
     queryset = User.objects.shelter()
-    serializer_class = AbrigoSerializer
+    serializer_class = ShelterSerializer
     permission_classes = [IsAuthenticated, DeleteUpdateUserObjPermission]
 
     def destroy(self, request, *args, **kwargs):

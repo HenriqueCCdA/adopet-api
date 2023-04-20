@@ -7,7 +7,7 @@ from adopet.pet.models import Pet
 pytestmark = pytest.mark.django_db
 
 
-URL = "pet:list-create"
+URL = "pet:list-create-pet"
 
 
 def test_positive_list(client_api_auth_user, pets):

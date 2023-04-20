@@ -59,7 +59,7 @@ class TutorSerializer(UserSerializer):
         return user
 
 
-class AbrigoSerializer(UserSerializer):  # TODO: nome em portugues
+class ShelterSerializer(UserSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="core:read-delete-update-shelter", read_only=True)
 
     def create(self, validate_data):
