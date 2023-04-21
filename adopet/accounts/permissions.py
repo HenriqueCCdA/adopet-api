@@ -1,7 +1,7 @@
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import SAFE_METHODS, BasePermission
 
 
-class RegisterPermission(BasePermission):
+class IsAuthenticatedOrRegister(BasePermission):
     """
     POST AnonymousUser and User return true
     LIST only User return true
@@ -14,17 +14,16 @@ class RegisterPermission(BasePermission):
         return bool(request.user and request.user.is_authenticated)
 
 
-class DeleteUpdateUserObjPermission(BasePermission):
-    """
-    Only user can update or delete itself
-    """
+class DeleteUpdateOnlyMyOwnObj(BasePermission):
+    """Only user can update or delete itself"""
 
     methods = ["DELETE", "PUT", "PATCH"]
 
     def has_object_permission(self, request, view, obj):
-        if request.method in self.methods:
-            if obj.pk == request.user.pk:
-                return True
-            return False
+        if request.method in SAFE_METHODS:
+            return True
 
-        return True
+        if request.method in self.methods:
+            return obj.pk == request.user.pk
+
+        return False
