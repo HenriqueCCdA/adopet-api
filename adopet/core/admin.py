@@ -21,6 +21,7 @@ class PetAdmin(admin.ModelAdmin):
                     "size",
                     "age",
                     "behavior",
+                    "shelter",
                     "is_adopted",
                 )
             },
@@ -38,6 +39,7 @@ class PetAdmin(admin.ModelAdmin):
         "size",
         "age",
         "behavior",
+        "shelter",
         "is_active",
         "is_adopted",
         "created_at",
