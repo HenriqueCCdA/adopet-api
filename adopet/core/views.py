@@ -1,73 +1,39 @@
-from django.contrib.auth import get_user_model
+from django.db import transaction
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import (
+    CreateAPIView,
+    ListCreateAPIView,
+    RetrieveDestroyAPIView,
+    RetrieveUpdateDestroyAPIView,
+)
+from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from adopet.core.paginators import MyPagination
-from adopet.core.permissions import DeleteUpdateUserObjPermission, RegisterPermission
-from adopet.core.serializers import (
-    ShelterSerializer,
-    TutorSerializer,
-    VersionSerializer,
-    WhoamiSerializer,
-)
-
-User = get_user_model()
+from adopet.accounts.models import CustomUser as User
+from adopet.accounts.paginators import MyPagination
+from adopet.core.models import Adoption, Pet
+from adopet.core.serializers import AdoptionSerializer, PetSerializer
 
 
-class Whoami(APIView):
+class PetLC(ListCreateAPIView):
+    queryset = Pet.objects.filter(is_active=True)  # TODO cria o maneger para isso-
+    serializer_class = PetSerializer
+    pagination_class = MyPagination
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser]
+
+
+class PetRDU(RetrieveUpdateDestroyAPIView):
+    queryset = Pet.objects.filter(is_active=True)  # TODO cria o maneger para isso
+    serializer_class = PetSerializer
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(responses=WhoamiSerializer)
-    def get(self, request):
-        """Retorna o usuário que pertence o Token"""
-        user = request.user
-
-        data = {"id": user.pk, "name": user.name, "email": user.email, "role": user.get_role_display()}
-
-        serialize = WhoamiSerializer(instance=data)
-
-        return Response(serialize.data)
-
-
-class Version(APIView):
-    @extend_schema(responses=VersionSerializer)
-    def get(self, request):
-        """Versão da api"""
-
-        serialize = VersionSerializer(instance={"version": 1.0})
-
-        return Response(serialize.data)
-
-
-class TutorLC(ListCreateAPIView):
-    """
-    POST Register new tutor not need to be auth
-    GET: List tutors need to be auth
-    """
-
-    queryset = User.objects.tutor()
-    serializer_class = TutorSerializer
-    pagination_class = MyPagination
-    permission_classes = [RegisterPermission]
-
-
-class TutorRDU(RetrieveUpdateDestroyAPIView):
-    """Read, Delete and Update a Tutor need to be auth."""
-
-    DELETE_MSG = {"msg": "Tutor deletado com sucesso."}
-
-    queryset = User.objects.tutor()
-    serializer_class = TutorSerializer
-    permission_classes = [IsAuthenticated, DeleteUpdateUserObjPermission]
-
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         self.perform_destroy(instance)
-        return Response(data={"msg": "Tutor deletado com sucesso."}, status=status.HTTP_200_OK)
+        return Response(data={"msg": "Pet deletado com sucesso."}, status=status.HTTP_200_OK)
 
     def perform_destroy(self, instance):
         """Soft delete"""
@@ -79,45 +45,36 @@ class TutorRDU(RetrieveUpdateDestroyAPIView):
         return Response({"detail": 'Method "PUT" not allowed.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-class ShelterLC(ListCreateAPIView):
-    """
-    POST: Register new shelter not need to be auth
-    GET: List shelters need to be auth
-    """
-
-    queryset = User.objects.shelter()
-    serializer_class = ShelterSerializer
-    pagination_class = MyPagination
-    permission_classes = [RegisterPermission]
+class AdoptionC(CreateAPIView):
+    queryset = Adoption.objects.all()
+    serializer_class = AdoptionSerializer
+    permission_classes = [IsAuthenticated]
 
 
-class ShelterRDU(RetrieveUpdateDestroyAPIView):
-    """Read, Delete and Update a shelter need to be auth."""
+class AdoptionRD(RetrieveDestroyAPIView):
+    """Only shelter can delete a adoption"""
 
-    queryset = User.objects.shelter()
-    serializer_class = ShelterSerializer
-    permission_classes = [IsAuthenticated, DeleteUpdateUserObjPermission]
+    queryset = Adoption.objects.all()
+    serializer_class = AdoptionSerializer
+    permission_classes = [IsAuthenticated]
 
     def destroy(self, request, *args, **kwargs):
+        if request.user.role == User.Role.TUTOR:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
         instance = self.get_object()
         self.perform_destroy(instance)
-        return Response(data={"msg": "Abrigo deletado com sucesso."}, status=status.HTTP_200_OK)
+        return Response(data={"msg": "Adoção deletada com sucesso."}, status=status.HTTP_200_OK)
 
     def perform_destroy(self, instance):
-        """Soft delete"""
-        instance.is_active = False
-        instance.save()
-
-    @extend_schema(methods=["PUT"], exclude=True)
-    def put(self, request, *args, **kwargs):
-        return Response({"detail": 'Method "PUT" not allowed.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        """Hard delete and set pet.is_adopted to False"""
+        instance.pet.is_adopted = False
+        with transaction.atomic():
+            instance.pet.save()
+            instance.delete()
 
 
-tutor_list_create = TutorLC.as_view()
-tutor_read_delete_update = TutorRDU.as_view()
-
-shelter_list_create = ShelterLC.as_view()
-shelter_read_delete_update = ShelterRDU.as_view()
-
-version = Version.as_view()
-whoami = Whoami.as_view()
+rdu_pet = PetRDU.as_view()
+lc_pet = PetLC.as_view()
+c_adoption = AdoptionC.as_view()
+rd_adoption = AdoptionRD.as_view()

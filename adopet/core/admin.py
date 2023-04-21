@@ -1,82 +1,101 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from adopet.core.models import CustomUser as User
+from .models import Adoption, Pet
 
 
-class UserAdmin(UserAdmin):
+@admin.register(Pet)
+class PetAdmin(admin.ModelAdmin):
     fieldsets = (
         (
             None,
             {"fields": ("id",)},
         ),
         (
-            _("User data"),
+            _("Pet Info"),
             {
                 "fields": (
-                    "email",
-                    "password",
+                    "name",
+                    "photo_tag",
+                    "photo",
+                    "size",
+                    "age",
+                    "behavior",
+                    "is_adopted",
                 )
             },
         ),
         (
-            _("Personal info"),
-            {"fields": ("name",)},
-        ),
-        (
-            _("User type"),
-            {"fields": ("role",)},
-        ),
-        (
             _("Permissions"),
-            {
-                "fields": (
-                    "is_active",
-                    "is_staff",
-                    "is_superuser",
-                    "groups",
-                    "user_permissions",
-                ),
-            },
+            {"fields": ("is_active",)},
         ),
-        (_("Important dates"), {"fields": ("last_login", "created_at", "modified_at")}),
-    )
-
-    add_fieldsets = (
-        (
-            None,
-            {
-                "classes": ("wide",),
-                "fields": ("email", "password1", "password2"),
-            },
-        ),
+        (_("Date"), {"fields": ("created_at", "modified_at")}),
     )
 
     list_display = (
         "id",
         "name",
-        "email",
-        "is_staff",
+        "size",
+        "age",
+        "behavior",
         "is_active",
-        "role",
+        "is_adopted",
         "created_at",
         "modified_at",
     )
-    list_filter = (
-        "is_active",
-        "role",
-    )
+
+    list_filter = ("is_active",)
 
     readonly_fields = (
         "id",
-        "last_login",
+        "created_at",
+        "modified_at",
+        "photo_tag",
+    )
+
+    search_fields = ("name", "email")
+    ordering = ("name",)
+
+
+@admin.register(Adoption)
+class AdoptionAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (
+            None,
+            {"fields": ("id",)},
+        ),
+        (
+            _("Pet Info"),
+            {
+                "fields": (
+                    "pet",
+                    "tutor",
+                    "date",
+                )
+            },
+        ),
+        (
+            _("Permissions"),
+            {"fields": ("is_active",)},
+        ),
+        (_("Date"), {"fields": ("created_at", "modified_at")}),
+    )
+
+    list_display = (
+        "id",
+        "pet",
+        "tutor",
+        "date",
         "created_at",
         "modified_at",
     )
 
-    search_fields = ("name", "email")
-    ordering = ("email",)
+    list_filter = ("is_active",)
 
+    search_fields = ("pet", "tutor")
 
-admin.site.register(User, UserAdmin)
+    readonly_fields = (
+        "id",
+        "created_at",
+        "modified_at",
+    )
