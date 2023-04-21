@@ -57,7 +57,6 @@ def create_pet_payload(shelter, pet_photo):
         "size": "B",
         "age": 2,
         "behavior": fake.sentence(nb_words=5),
-        "shelter": shelter.pk,
         "photo": pet_photo,
     }
 

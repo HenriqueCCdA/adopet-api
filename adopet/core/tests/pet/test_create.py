@@ -10,10 +10,10 @@ pytestmark = pytest.mark.django_db
 URL = "core:list-create-pet"
 
 
-def test_positive(client_api_auth_user, create_pet_payload):
+def test_positive(client_api_auth_shelter, create_pet_payload):
     url = resolve_url(URL)
 
-    resp = client_api_auth_user.post(url, data=create_pet_payload, format="multipart")
+    resp = client_api_auth_shelter.post(url, data=create_pet_payload, format="multipart")
 
     assert resp.status_code == status.HTTP_201_CREATED
 
@@ -34,6 +34,18 @@ def test_positive(client_api_auth_user, create_pet_payload):
     assert resp["Location"] == f"http://testserver/pet/{pet.id}/"
 
 
+def test_negative_must_be_shelter(client_api_auth_user, create_pet_payload):
+    url = resolve_url(URL)
+
+    resp = client_api_auth_user.post(url, data=create_pet_payload, format="multipart")
+
+    assert resp.status_code == status.HTTP_400_BAD_REQUEST
+
+    body = resp.json()
+
+    assert body == {"non_field_errors": ["O user precisa ser um abrigo."]}
+
+
 @pytest.mark.parametrize(
     "field",
     [
@@ -41,7 +53,6 @@ def test_positive(client_api_auth_user, create_pet_payload):
         "size",
         "age",
         "behavior",
-        "shelter",
     ],
 )
 def test_negative_missing_fields(client_api_auth_user, field, create_pet_payload):
@@ -69,8 +80,6 @@ def test_negative_missing_fields(client_api_auth_user, field, create_pet_payload
         ("age", -1, "Certifque-se de que este valor seja maior ou igual a 0."),
         ("age", "d-1", "Um número inteiro válido é exigido."),
         ("behavior", "a" * 101, "Certifique-se de que este campo não tenha mais de 100 caracteres."),
-        ("shelter", 11111, 'Pk inválido "11111" - objeto não existe.'),
-        ("shelter", "dd", "Tipo incorreto. Esperado valor pk, recebeu str."),
     ],
 )
 def test_negative_validation_errors(client_api_auth_user, field, value, error, create_pet_payload):

@@ -142,7 +142,7 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Adopet API",
-    "DESCRIPTION": "API da plataforma adopet",
+    "DESCRIPTION": "API da plataforma adopet. O desenvolvimento dessa API é apenas para fins didáticos",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "COMPONENT_SPLIT_REQUEST": True,

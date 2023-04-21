@@ -50,8 +50,8 @@ class Version(APIView):
 
 class TutorLC(ListCreateAPIView):
     """
-    POST Register new tutor not need to be auth
-    GET: List tutors need to be auth
+    - **POST**: Register new tutor not need to be auth
+    - **GET**: List tutors need to be auth
     """
 
     queryset = User.objects.tutor()
@@ -61,7 +61,7 @@ class TutorLC(ListCreateAPIView):
 
 
 class TutorRDU(RetrieveUpdateDestroyAPIView):
-    """Read, Delete and Update a Tutor need to be auth."""
+    """**Read**, **Delete** and **Update** a Tutor need to be auth."""
 
     DELETE_MSG = {"msg": "Tutor deletado com sucesso."}
 
@@ -86,8 +86,8 @@ class TutorRDU(RetrieveUpdateDestroyAPIView):
 
 class ShelterLC(ListCreateAPIView):
     """
-    POST: Register new shelter not need to be auth
-    GET: List shelters need to be auth
+    - **POST**: Register new shelter not need to be auth
+    - **GET**: List shelters need to be auth
     """
 
     queryset = User.objects.shelter()
@@ -97,7 +97,7 @@ class ShelterLC(ListCreateAPIView):
 
 
 class ShelterRDU(RetrieveUpdateDestroyAPIView):
-    """Read, Delete and Update a shelter need to be auth."""
+    """**Read**, **Delete** and **Update** a shelter need to be auth."""
 
     queryset = User.objects.shelter()
     serializer_class = ShelterSerializer
