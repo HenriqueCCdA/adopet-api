@@ -62,7 +62,6 @@ def test_positive_metadata_fields():
         "size",
         "age",
         "behavior",
-        "shelter",
     ],
 )
 def test_negative_missing_fields(field, create_pet_payload):
@@ -85,8 +84,6 @@ def test_negative_missing_fields(field, create_pet_payload):
         ("age", -1, "Certifque-se de que este valor seja maior ou igual a 0."),
         ("age", "d-1", "Um número inteiro válido é exigido."),
         ("behavior", "a" * 101, "Certifique-se de que este campo não tenha mais de 100 caracteres."),
-        ("shelter", 11111, 'Pk inválido "11111" - objeto não existe.'),
-        ("shelter", "dd", "Tipo incorreto. Esperado valor pk, recebeu str."),
     ],
 )
 def test_negative_validation_errors(field, value, error, create_pet_payload):
@@ -101,11 +98,43 @@ def test_negative_validation_errors(field, value, error, create_pet_payload):
     assert serializer.errors[field] == [error]
 
 
-def test_positive_create(create_pet_payload):
-    serializer = PetSerializer(data=create_pet_payload)
+def test_positive_create(create_pet_payload, shelter):
+    request = RequestFactory().request()
+    request.user = shelter
+
+    serializer = PetSerializer(data=create_pet_payload, context={"request": request})
 
     assert serializer.is_valid()
 
     serializer.save()
 
     assert Pet.objects.exists()
+
+
+def test_negative_create_without_request_in_context(create_pet_payload, shelter):
+    serializer = PetSerializer(data=create_pet_payload)
+
+    assert not serializer.is_valid()
+
+    assert serializer.errors["non_field_errors"] == ["O user precisa estar no contexto."]
+
+
+def test_negative_create_request_without_user(create_pet_payload, shelter):
+    request = RequestFactory().request()
+
+    serializer = PetSerializer(data=create_pet_payload, context={"request": request})
+
+    assert not serializer.is_valid()
+
+    assert serializer.errors["non_field_errors"] == ["O user precisa estar no contexto."]
+
+
+def test_negative_create_user_must_be_shelter(create_pet_payload, tutor):
+    request = RequestFactory().request()
+    request.user = tutor
+
+    serializer = PetSerializer(data=create_pet_payload, context={"request": request})
+
+    assert not serializer.is_valid()
+
+    assert serializer.errors["non_field_errors"] == ["O user precisa ser um abrigo."]
