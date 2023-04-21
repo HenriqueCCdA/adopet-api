@@ -2,14 +2,14 @@ from django.contrib.auth import get_user_model
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from adopet.accounts.paginators import MyPagination
 from adopet.accounts.permissions import (
-    DeleteUpdateUserObjPermission,
-    RegisterPermission,
+    DeleteUpdateOnlyMyOwnObj,
+    IsAuthenticatedOrRegister,
 )
 from adopet.accounts.serializers import (
     ShelterSerializer,
@@ -37,6 +37,8 @@ class Whoami(APIView):
 
 
 class Version(APIView):
+    permission_classes = [AllowAny]
+
     @extend_schema(responses=VersionSerializer)
     def get(self, request):
         """Versão da api"""
@@ -55,7 +57,7 @@ class TutorLC(ListCreateAPIView):
     queryset = User.objects.tutor()
     serializer_class = TutorSerializer
     pagination_class = MyPagination
-    permission_classes = [RegisterPermission]
+    permission_classes = [IsAuthenticatedOrRegister]
 
 
 class TutorRDU(RetrieveUpdateDestroyAPIView):
@@ -65,7 +67,7 @@ class TutorRDU(RetrieveUpdateDestroyAPIView):
 
     queryset = User.objects.tutor()
     serializer_class = TutorSerializer
-    permission_classes = [IsAuthenticated, DeleteUpdateUserObjPermission]
+    permission_classes = [IsAuthenticated, DeleteUpdateOnlyMyOwnObj]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -91,7 +93,7 @@ class ShelterLC(ListCreateAPIView):
     queryset = User.objects.shelter()
     serializer_class = ShelterSerializer
     pagination_class = MyPagination
-    permission_classes = [RegisterPermission]
+    permission_classes = [IsAuthenticatedOrRegister]
 
 
 class ShelterRDU(RetrieveUpdateDestroyAPIView):
@@ -99,7 +101,7 @@ class ShelterRDU(RetrieveUpdateDestroyAPIView):
 
     queryset = User.objects.shelter()
     serializer_class = ShelterSerializer
-    permission_classes = [IsAuthenticated, DeleteUpdateUserObjPermission]
+    permission_classes = [IsAuthenticated, DeleteUpdateOnlyMyOwnObj]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
