@@ -1,20 +1,13 @@
 from django.urls import path
-from rest_framework.authtoken.views import obtain_auth_token
 
 from . import views
 
 app_name = "core"
 urlpatterns = [
     #
-    path("", views.version, name="version"),
+    path("pet/", views.lc_pet, name="list-create-pet"),
+    path("pet/<int:pk>/", views.rdu_pet, name="read-delete-update-pet"),
     #
-    path("tutores/", views.tutor_list_create, name="list-create-tutor"),
-    path("tutores/<int:pk>/", views.tutor_read_delete_update, name="read-delete-update-tutor"),
-    #
-    path("abrigos/", views.shelter_list_create, name="list-create-shelter"),
-    path("abrigos/<int:pk>/", views.shelter_read_delete_update, name="read-delete-update-shelter"),
-    #
-    path("login/", obtain_auth_token, name="login"),
-    #
-    path("whoami/", views.whoami, name="whoami"),
+    path("adoption/", views.c_adoption, name="create-adoption"),
+    path("adoption/<int:pk>/", views.rd_adoption, name="read-delete-adoption"),
 ]

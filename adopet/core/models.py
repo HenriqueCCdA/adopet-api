@@ -1,57 +1,75 @@
-from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin
-from django.core.mail import send_mail
 from django.db import models
-from django.utils.translation import gettext_lazy as _
+from django.utils.html import mark_safe
 
-from adopet.core.managers import UserManager
-
-
-class CreationModificationBase(models.Model):
-    created_at = models.DateTimeField(_("Creation Date and Time"), auto_now_add=True)
-    modified_at = models.DateTimeField(_("Modificatioin Date and Time"), auto_now=True)
-
-    class Meta:
-        abstract = True
+from adopet.accounts.models import CreationModificationBase
+from adopet.accounts.models import CustomUser as User
 
 
-class CustomUser(CreationModificationBase, AbstractBaseUser, PermissionsMixin):
-    """
-    App base User class.
-    Email and password are required. Other fields are optional.
-    """
+def upload_to(instance, filename):
+    return f"photos/{filename}"
 
-    class Role(models.TextChoices):
-        TUTOR = "T", "Tutor"
-        SHELTER = "S", "Abrigo"
 
-    name = models.CharField("Nome completo", max_length=120)
-    email = models.EmailField("Email", unique=True)
+class Pet(CreationModificationBase):
+    class Size(models.TextChoices):
+        SMALL = "S", "Porte pequeno"
+        MEDIUM = "M", "Porte Médio"
+        BIG = "B", "Porte Grande"
 
-    is_staff = models.BooleanField("staff status", default=False)
+    name = models.CharField("Nome", max_length=100)
+    size = models.CharField("Porte", max_length=1, choices=Size.choices)
+    age = models.PositiveSmallIntegerField("Idade")
+    behavior = models.CharField("Comportamento", max_length=100)
+    photo = models.ImageField("Foto", upload_to=upload_to, blank=True, null=True)
+
+    shelter = models.ForeignKey(
+        User,
+        related_name="pets",
+        on_delete=models.CASCADE,
+        limit_choices_to={
+            "role": User.Role.SHELTER,
+            "is_active": True,
+        },
+    )
+
     is_active = models.BooleanField("Ativo", default=True)
-
-    role = models.CharField("Cargos", max_length=1, choices=Role.choices, null=True, blank=True)
-
-    objects = UserManager()
-
-    EMAIL_FIELD = "email"
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+    is_adopted = models.BooleanField("Adotado", default=False)
 
     class Meta:
-        verbose_name = _("user")
-        verbose_name_plural = _("users")
-        abstract = False
         ordering = ("-created_at",)
 
-    def clean(self):
-        super().clean()
-        self.email = self.__class__.objects.normalize_email(self.email)
+    def __str__(self):
+        return self.name
 
-    def email_user(self, subject, message, from_email=None, **kwargs):
-        """Send an email to this user."""
-        send_mail(subject, message, from_email, [self.email], **kwargs)
+    def photo_tag(self):
+        return mark_safe(f'<img src="{self.photo.url}" width="150" height="150" />')
+
+    photo_tag.short_description = "photo"
+
+
+class Adoption(CreationModificationBase):
+    pet = models.OneToOneField(
+        Pet,
+        limit_choices_to={
+            "is_active": True,
+            "is_adopted": False,
+        },
+        on_delete=models.CASCADE,
+    )
+    # TODO: Colocar um limite para numero de adoções de um tutor
+    tutor = models.ForeignKey(
+        User,
+        related_name="adoptions",
+        on_delete=models.CASCADE,
+        limit_choices_to={
+            "role": User.Role.TUTOR,
+            "is_active": True,
+        },
+    )
+    date = models.DateField("Data")
+    is_active = models.BooleanField("Ativo", default=True)
+
+    class Meta:
+        ordering = ("-created_at",)
 
     def __str__(self):
-        return self.email
+        return f"{self.tutor.name}:{self.pet}"

@@ -6,8 +6,8 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", include("adopet.accounts.urls")),
     path("", include("adopet.core.urls")),
-    path("", include("adopet.pet.urls")),
 ]
 
 if settings.DOC_API:

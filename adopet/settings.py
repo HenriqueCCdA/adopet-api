@@ -14,7 +14,7 @@ DEBUG = config("DEBUG", cast=bool, default=False)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
-AUTH_USER_MODEL = "core.CustomUser"
+AUTH_USER_MODEL = "accounts.CustomUser"
 
 DOC_API = config("DOC_API", cast=bool, default=False)
 
@@ -29,11 +29,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     #
     "django_extensions",
+    #
     "rest_framework",
     "rest_framework.authtoken",
     #
+    "adopet.accounts",
     "adopet.core",
-    "adopet.pet",
 ]
 
 if DOC_API:
