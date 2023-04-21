@@ -23,6 +23,10 @@ class PetSerializer(serializers.ModelSerializer):
             "modified_at",
         )
 
+        extra_kwargs = {
+            "is_adopted": {"read_only": True},
+        }
+
 
 class AdoptionSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="core:read-delete-adoption", read_only=True)

@@ -66,6 +66,7 @@ class UserAdmin(UserAdmin):
     list_filter = (
         "is_active",
         "role",
+        "is_staff",
     )
 
     readonly_fields = (
