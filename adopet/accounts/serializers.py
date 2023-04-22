@@ -1,4 +1,5 @@
 from django.contrib.auth.password_validation import validate_password
+from django.db import transaction
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 
@@ -53,10 +54,11 @@ class TutorSerializer(UserSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="accounts:read-delete-update-tutor", read_only=True)
 
     def create(self, validate_data):
-        user = super().create(validate_data)
-        user.role = User.Role.TUTOR
-        user.save()
-        Token.objects.create(user=user)
+        with transaction.atomic():
+            user = super().create(validate_data)
+            user.role = User.Role.TUTOR
+            user.save()
+            Token.objects.create(user=user)
         return user
 
 
@@ -64,10 +66,11 @@ class ShelterSerializer(UserSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="accounts:read-delete-update-shelter", read_only=True)
 
     def create(self, validate_data):
-        user = super().create(validate_data)
-        user.role = User.Role.SHELTER
-        user.save()
-        Token.objects.create(user=user)
+        with transaction.atomic():
+            user = super().create(validate_data)
+            user.role = User.Role.SHELTER
+            user.save()
+            Token.objects.create(user=user)
         return user
 
     # TODO: adiciona a campo pets

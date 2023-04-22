@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db import transaction
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
@@ -110,8 +111,10 @@ class ShelterRDU(RetrieveUpdateDestroyAPIView):
 
     def perform_destroy(self, instance):
         """Soft delete"""
-        instance.is_active = False
-        instance.save()
+        with transaction.atomic():
+            instance.is_active = False
+            instance.pets.update(is_active=False)
+            instance.save()
 
     @extend_schema(methods=["PUT"], exclude=True)
     def put(self, request, *args, **kwargs):
