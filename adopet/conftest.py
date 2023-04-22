@@ -1,13 +1,17 @@
+import io
+
 import pytest
-from django.contrib.auth import get_user_model
+from django.core.files.base import ContentFile
 from faker import Faker
 from model_bakery import baker
+from PIL import Image
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
 
-fake = Faker()
+from adopet.accounts.models import CustomUser as User
+from adopet.core.models import Pet
 
-User = get_user_model()
+fake = Faker()
 
 
 @pytest.fixture(autouse=True)
@@ -41,6 +45,39 @@ def users(superuser):
 
 
 @pytest.fixture
+def pet_photo():
+    file = io.BytesIO()
+    image = Image.new("RGBA", size=(100, 100), color=(155, 0, 0))
+    image.save(file, "png")
+    file.seek(0)
+    return ContentFile(file.read(), name="photo.png")
+
+
+@pytest.fixture
+def shelter():
+    return baker.make(User, role=User.Role.SHELTER, is_active=True)
+
+
+@pytest.fixture
+def tutor():
+    return baker.make(User, role=User.Role.TUTOR, is_active=True)
+
+
+@pytest.fixture
+def pet(shelter, pet_photo):
+    return baker.make(Pet, shelter=shelter, photo=pet_photo)
+
+
+@pytest.fixture
+def pets(shelter, pet_photo):
+    baker.make(Pet, _quantity=4, shelter=shelter, photo=pet_photo)
+    baker.make(Pet, _quantity=2, is_adopted=True, shelter=shelter, photo=pet_photo)
+    baker.make(Pet, _quantity=3, is_active=False, shelter=shelter, photo=pet_photo)
+
+    return list(Pet.objects.all())
+
+
+@pytest.fixture
 def create_tutor_payload():
     password = fake.password()
 
@@ -64,14 +101,14 @@ def create_abrigo_payload():
     }
 
 
-@pytest.fixture
-def tutor():
-    return User.objects.create_user(
-        name=fake.name(),
-        email=fake.email(),
-        password=fake.password(),
-        role=User.Role.TUTOR,
-    )
+# @pytest.fixture
+# def tutor():
+#     return User.objects.create_user(
+#         name=fake.name(),
+#         email=fake.email(),
+#         password=fake.password(),
+#         role=User.Role.TUTOR,
+#     )
 
 
 @pytest.fixture
@@ -85,14 +122,14 @@ def client_api_auth_tutor(client_api, tutor):
     return client_api
 
 
-@pytest.fixture
-def shelter():
-    return User.objects.create_user(
-        name=fake.name(),
-        email=fake.email(),
-        password=fake.password(),
-        role=User.Role.SHELTER,
-    )
+# @pytest.fixture
+# def shelter():
+#     return User.objects.create_user(
+#         name=fake.name(),
+#         email=fake.email(),
+#         password=fake.password(),
+#         role=User.Role.SHELTER,
+#     )
 
 
 @pytest.fixture

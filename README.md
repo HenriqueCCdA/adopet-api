@@ -23,6 +23,86 @@ Desafio backend 6 da alura.
 
 A documentação da API (swagger) esta disponível na rota `/docs/`. Portanto localmente `http://localhost:8000/docs/`.
 
+### Funcionalidades
+
+#### Tutors
+
+- `Cadastrar`: Salvar tutor através de um **POST /tutor/**.
+
+- `Buscar por id`: Busca Tutor por ID através de um **GET /tutor/{ID}/**, onde *{ID}* é o identificador do Tutor.
+  - É necessário estar autenticado.
+
+- `Buscar todos`: Busca paginada de tutores através de um **GET /tutor/**.
+  - É necessário estar autenticado.
+
+- `Atualizar`: Atualizar Tutor através de um **PUT /tutor/{ID}/**, onde *ID* é o identificador do Tutor.
+  - Apenas o próprio usuário Tutor pode atualizar seus dados.
+  - É necessário estar autenticado.
+
+- `Deletar`: Deletar Tutor através de um **DELETE /tutor/{ID}**, onde *{ID}* é o identificador do Tutor.
+  - Apenas o próprio usuário Tutor pode se deletar.
+  - É necessário estar autenticado.
+  - O objeto não deletado de verdade do banco de dados (**soft delete**)
+
+#### Shelter
+
+- `Cadastrar`: Salvar Shelter através de um **POST /shelters/**.
+
+- `Buscar todos`: Busca paginada de shelters através de um **GET /api/shelters/**.
+  - É necessário estar autenticado.
+
+- `Buscar por id`: Busca Shelter por ID através de um **GET /shelters/{ID}/**, onde *{ID}* é o identificador do Shelter.
+  - É necessário estar autenticado.
+
+- `Atualizar`: Atualizar Shelter através de um **PATCH /shelters/{ID}/**, onde *ID* é o identificador do Shelter,
+  os novos dados do abrigo devem ser enviados no corpo da requisição.
+  - Apenas o próprio usuário Shelter pode atualizar seus dados.
+  - É necessário estar autenticado.
+
+- `Deletar`: Deletar Shelter através de um **DELETE /api/shelters/{ID}**, onde *{ID}* é o identificador do Shelter.
+  - Apenas o próprio usuário Shelter pode se deletar.
+  - É necessário estar autenticado.
+  - O objeto não deletado de verdade do banco de dados (**soft delete**)
+  - Todos os **pets** associando as este abrigo também são deletados.
+
+#### Pet
+- `Cadastrar`: Salvar Pet através de um **POST /pets/** com as informações.
+  - Apenas Shelters podem cadastrar Pets.
+
+- `Buscar todos`: Busca paginada de pets através de um **GET /pets/**.
+  - É necessário estar autenticado.
+
+- `Buscar por id`: Busca Pet por ID através de um **GET /pets/{ID}/**, onde *{ID}* é o identificador do Pet.
+  - É necessário estar autenticado.
+
+- `Atualizar`: Atualizar Pet através de um **PATH /pets/{ID}/**, onde *ID* é o identificador do Pet,
+  os novos dados do pet devem ser enviados no corpo da requisição.
+  <!-- - Apenas o Shelter que cadastrou o Pet pode atualiza-lo. -->
+
+- `Deletar`: Deletar Pet através de um **DELETE /api/pets/{ID}**, onde *{ID}* é o identificador do Pet.
+  - Apenas o Shelter que cadastrou o Pet pode deleta-lo.
+  - objeto não deletado de verdade do banco de dados (**soft delete**)
+  <!-- - Pet relacionado a uma Adoption não pode ser deletado. -->
+
+#### Adoption
+- `Adotar`: Solicitar uma adoção de um Pet através de um **POST /adoptions/**.
+  - Apenas usuários do tipo tutor podem solicitar uma adoção.
+  - É necessário estar autenticado
+  - Apenas Pets não adotados podem receber uma solicitação de adoção.
+
+- `Buscar todos`: Busca paginada de adoções através de um **GET /adoptions**.
+  - É necessário estar autenticado.
+  <!-- - Busca somente adoções relacionadas ao usuário autenticado (Shelter ou Guardian). -->
+
+<!-- - `Atualizar status`: Atualização de status através de um ** /api/adoptions/{ID}/status** com a informação *status*
+  em um JSON no corpor da requisição. Os status possíveis são *ANALYSING*, *CONCLUDED* e *CANCELED*. Apenas usuários do tipo
+  Shelter atualizar status.
+  - Uma adoção só pode ter o status atualizado pelo Shelter relacionado na adoção.<br> -->
+
+- `Deletar`: Deletar uma adoção através de um **DELETE /api/adoptions/{ID}**, onde *{ID}* é o identificador da Adoção.
+  - O objeto é deletado de verdade do banco de dados.(**hard delete**)
+  - Uma adoção só pode ser deletada pelo Shelter relacionado na adoção.<br> -->
+
 
 ## Variaveis de ambiente
 
