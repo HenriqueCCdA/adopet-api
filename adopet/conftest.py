@@ -59,6 +59,11 @@ def shelter():
 
 
 @pytest.fixture
+def other_shelter(shelter):
+    return baker.make(User, role=User.Role.SHELTER, is_active=True)
+
+
+@pytest.fixture
 def tutor():
     return baker.make(User, role=User.Role.TUTOR, is_active=True)
 
@@ -66,6 +71,11 @@ def tutor():
 @pytest.fixture
 def pet(shelter, pet_photo):
     return baker.make(Pet, shelter=shelter, photo=pet_photo)
+
+
+@pytest.fixture
+def pet_from_other_shelter(other_shelter, pet_photo):
+    return baker.make(Pet, shelter=other_shelter, photo=pet_photo)
 
 
 @pytest.fixture
