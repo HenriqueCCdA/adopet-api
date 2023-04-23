@@ -25,6 +25,16 @@ def test_positive(client_api_auth_shelter, pet):
     assert body["name"] == "Update name"
 
 
+def test_negative_shelter_can_update_pets_belongs_to_own(client_api_auth_shelter, pet_from_other_shelter):
+    pk = pet_from_other_shelter.pk
+    url = resolve_url(URL, pk=pk)
+    resp = client_api_auth_shelter.patch(url)
+
+    assert resp.status_code == status.HTTP_403_FORBIDDEN
+    body = resp.json()
+    assert body["detail"] == "Você não tem permissão para executar essa ação."
+
+
 def test_negative_only_shelter_can_update_pet(client_api_auth_user, pet):
     pk = pet.pk
 

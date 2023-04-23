@@ -38,16 +38,16 @@ def test_negative_only_shelter_can_delete_pet(client_api_auth_user, pet):
     assert pet.is_active
 
 
-# def test_negative_shelter_can_delete_pets_belongs_to_own(client_api_auth_shelter, pet_from_other_shelter):
-#     pk = pet_from_other_shelter.pk
-#     url = resolve_url(URL, pk=pk)
-#     resp = client_api_auth_shelter.delete(url)
+def test_negative_shelter_can_delete_pets_belongs_to_own(client_api_auth_shelter, pet_from_other_shelter):
+    pk = pet_from_other_shelter.pk
+    url = resolve_url(URL, pk=pk)
+    resp = client_api_auth_shelter.delete(url)
 
-#     assert resp.status_code == status.HTTP_403_FORBIDDEN
-#     pet_from_other_shelter.refresh_from_db()
-#     body = resp.json()
-#     assert body["detail"] == "Você não tem permissão para executar essa ação."
-#     assert pet_from_other_shelter.is_active
+    assert resp.status_code == status.HTTP_403_FORBIDDEN
+    pet_from_other_shelter.refresh_from_db()
+    body = resp.json()
+    assert body["detail"] == "Você não tem permissão para executar essa ação."
+    assert pet_from_other_shelter.is_active
 
 
 def test_negative_invalid_id(client_api_auth_shelter, pets):
