@@ -17,13 +17,8 @@ class IsAuthenticatedOrRegister(BasePermission):
 class DeleteUpdateOnlyMyOwnObj(BasePermission):
     """Only user can update or delete itself"""
 
-    methods = ["DELETE", "PUT", "PATCH"]
-
     def has_object_permission(self, request, view, obj):
         if request.method in SAFE_METHODS:
             return True
 
-        if request.method in self.methods:
-            return obj.pk == request.user.pk
-
-        return False
+        return obj.pk == request.user.pk

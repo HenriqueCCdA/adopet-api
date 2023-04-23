@@ -10,10 +10,10 @@ pytestmark = pytest.mark.django_db
 URL = "core:create-adoption"
 
 
-def test_positive(client_api_auth_user, create_adoption_payload):
+def test_positive(client_api_auth_tutor, create_adoption_payload):
     url = resolve_url(URL)
 
-    resp = client_api_auth_user.post(url, data=create_adoption_payload)
+    resp = client_api_auth_tutor.post(url, data=create_adoption_payload)
 
     assert resp.status_code == status.HTTP_201_CREATED
 
@@ -32,7 +32,19 @@ def test_positive(client_api_auth_user, create_adoption_payload):
     assert resp["Location"] == f"http://testserver/adoption/{adoption.pk}/"
 
 
-def test_negative_pet_must_have_active_equal_to_true(client_api_auth_user, create_adoption_payload, pet):
+def test_negative_must_be_tutor(client_api_auth_user, create_adoption_payload):
+    url = resolve_url(URL)
+
+    resp = client_api_auth_user.post(url, data=create_adoption_payload)
+
+    assert resp.status_code == status.HTTP_403_FORBIDDEN
+
+    body = resp.json()
+
+    assert body["detail"] == "Você não tem permissão para executar essa ação."
+
+
+def test_negative_pet_must_be_actived(client_api_auth_tutor, create_adoption_payload, pet):
     data = create_adoption_payload.copy()
 
     url = resolve_url(URL)
@@ -42,11 +54,11 @@ def test_negative_pet_must_have_active_equal_to_true(client_api_auth_user, creat
 
     data["pet"] = pet.pk
 
-    resp = client_api_auth_user.post(url, data=data)
+    resp = client_api_auth_tutor.post(url, data=data)
     assert resp.status_code == status.HTTP_400_BAD_REQUEST
 
 
-def test_negative_pet_must_have_adopted_equal_to_false(client_api_auth_user, create_adoption_payload, pet):
+def test_negative_pet_must_not_be_adopted(client_api_auth_tutor, create_adoption_payload, pet):
     data = create_adoption_payload.copy()
 
     url = resolve_url(URL)
@@ -56,11 +68,11 @@ def test_negative_pet_must_have_adopted_equal_to_false(client_api_auth_user, cre
 
     data["pet"] = pet.pk
 
-    resp = client_api_auth_user.post(url, data=data)
+    resp = client_api_auth_tutor.post(url, data=data)
     assert resp.status_code == status.HTTP_400_BAD_REQUEST
 
 
-def test_negative_tutor_must_have_active_equal_to_true(client_api_auth_user, create_adoption_payload, tutor):
+def test_negative_tutor_must_be_actived(client_api_auth_tutor, create_adoption_payload, tutor):
     data = create_adoption_payload.copy()
 
     url = resolve_url(URL)
@@ -70,22 +82,8 @@ def test_negative_tutor_must_have_active_equal_to_true(client_api_auth_user, cre
 
     data["tutor"] = tutor.pk
 
-    resp = client_api_auth_user.post(url, data=data)
-    assert resp.status_code == status.HTTP_400_BAD_REQUEST
-
-
-def test_negative_tutor_must_have_role_equal_to_T(client_api_auth_user, create_adoption_payload, tutor):
-    data = create_adoption_payload.copy()
-
-    url = resolve_url(URL)
-
-    tutor.role = "S"
-    tutor.save()
-
-    data["tutor"] = tutor.pk
-
-    resp = client_api_auth_user.post(url, data=data)
-    assert resp.status_code == status.HTTP_400_BAD_REQUEST
+    resp = client_api_auth_tutor.post(url, data=data)
+    assert resp.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 @pytest.mark.parametrize(
@@ -96,14 +94,14 @@ def test_negative_tutor_must_have_role_equal_to_T(client_api_auth_user, create_a
         "date",
     ],
 )
-def test_negative_missing_fields(client_api_auth_user, field, create_adoption_payload):
+def test_negative_missing_fields(client_api_auth_tutor, field, create_adoption_payload):
     data = create_adoption_payload.copy()
 
     del data[field]
 
     url = resolve_url(URL)
 
-    resp = client_api_auth_user.post(url, data=data)
+    resp = client_api_auth_tutor.post(url, data=data)
 
     assert resp.status_code == status.HTTP_400_BAD_REQUEST
 
@@ -123,14 +121,14 @@ def test_negative_missing_fields(client_api_auth_user, field, create_adoption_pa
         ("date", -1, "Formato inválido para data. Use um dos formatos a seguir: YYYY-MM-DD."),
     ],
 )
-def test_negative_validation_errors(client_api_auth_user, field, value, error, create_adoption_payload):
+def test_negative_validation_errors(client_api_auth_tutor, field, value, error, create_adoption_payload):
     data = create_adoption_payload.copy()
 
     data[field] = value
 
     url = resolve_url(URL)
 
-    resp = client_api_auth_user.post(url, data=data)
+    resp = client_api_auth_tutor.post(url, data=data)
 
     assert resp.status_code == status.HTTP_400_BAD_REQUEST
 

@@ -85,9 +85,9 @@ A documentação da API (swagger) esta disponível na rota `/docs/`. Portanto lo
 
 #### Adoption
 - `Adotar`: Solicitar uma adoção de um Pet através de um `POST /adoption/`.
-  <!-- - Apenas usuários do tipo tutor podem solicitar uma adoção. -->
+  - Apenas usuários do tipo tutor podem solicitar uma adoção.
   - É necessário estar autenticado
-  <!-- - Apenas Pets não é adotados podem receber uma solicitação de adoção. -->
+  - Apenas Pets não é adotados podem receber uma solicitação de adoção.
 
 - `Buscar todos`: Busca paginada de adoções através de um `GET /adoption/`.
   - É necessário estar autenticado.
@@ -100,7 +100,7 @@ A documentação da API (swagger) esta disponível na rota `/docs/`. Portanto lo
 
 - `Deletar`: Deletar uma adoção através de um `DELETE /adoption/{ID}`, onde *{ID}* é o identificador da Adoção.
   - O objeto é deletado de verdade do banco de dados.(`hard delete`)
-  <!-- - Uma adoção só pode ser deletada pelo Shelter relacionado na adoção.<br> -->
+  - Uma adoção só pode ser deletada pelo Shelter relacionado na adoção.
 
 
 ## Variaveis de ambiente

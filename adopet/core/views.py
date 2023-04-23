@@ -11,11 +11,12 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from adopet.accounts.models import CustomUser as User
 from adopet.accounts.paginators import MyPagination
 from adopet.core.models import Adoption, Pet
 from adopet.core.permissions import (
     OnlyShelterCanCreateDeleteUpdatePet,
+    OnlyTutorCanCreateAdoption,
+    ShelterCanDeleteAdoptionOfYouOwnPets,
     ShelterOnlyCanDeleteUpdateOwnPets,
 )
 from adopet.core.serializers import AdoptionSerializer, PetSerializer
@@ -34,7 +35,6 @@ class PetRDU(RetrieveUpdateDestroyAPIView):
     serializer_class = PetSerializer
     permission_classes = [
         IsAuthenticated,
-        OnlyShelterCanCreateDeleteUpdatePet,
         ShelterOnlyCanDeleteUpdateOwnPets,
     ]
 
@@ -56,7 +56,10 @@ class PetRDU(RetrieveUpdateDestroyAPIView):
 class AdoptionC(CreateAPIView):
     queryset = Adoption.objects.all()
     serializer_class = AdoptionSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [
+        IsAuthenticated,
+        OnlyTutorCanCreateAdoption,
+    ]
 
 
 class AdoptionRD(RetrieveDestroyAPIView):
@@ -64,12 +67,12 @@ class AdoptionRD(RetrieveDestroyAPIView):
 
     queryset = Adoption.objects.all()
     serializer_class = AdoptionSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [
+        IsAuthenticated,
+        ShelterCanDeleteAdoptionOfYouOwnPets,
+    ]
 
     def destroy(self, request, *args, **kwargs):
-        if request.user.role == User.Role.TUTOR:
-            return Response(status=status.HTTP_403_FORBIDDEN)
-
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(data={"msg": "Adoção deletada com sucesso."}, status=status.HTTP_200_OK)
