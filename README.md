@@ -76,7 +76,7 @@ A documentação da API (swagger) esta disponível na rota `/docs/`. Portanto lo
   - É necessário estar autenticado.
 
 - `Atualizar`: Atualizar Pet através de um `PATH /pet/{ID}/`, onde *ID* é o identificador do Pet.
- - Apenas o Abrigo que cadastrou o Pet pode atualiza-lo.
+  - Apenas o Abrigo que cadastrou o Pet pode atualiza-lo.
 
 - `Deletar`: Deletar Pet através de um `DELETE /pet/{ID}`, onde *{ID}* é o identificador do Pet.
   - Apenas o Abrigo que cadastrou o Pet pode deleta-lo.
@@ -119,7 +119,7 @@ DOC_API=True
 
 ## Rodando o projeto via docker.
 
-Você precisa primeiro cmpiar o docker compose de desenvolvimento para a raiz do projeto
+Você precisa primeiro copiar o docker compose de desenvolvimento para a raiz do projeto
 
 ```console
 cp docker/docker-compose.dev.yml docker-compose.yml
