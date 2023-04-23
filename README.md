@@ -35,7 +35,7 @@ A documentação da API (swagger) esta disponível na rota `/docs/`. Portanto lo
 - `Buscar todos`: Busca paginada de tutores através de um `GET /tutor/`.
   - É necessário estar autenticado.
 
-- `Atualizar`: Atualizar Tutor através de um `PUT /tutor/{ID}/`, onde *ID* é o identificador do Tutor.
+- `Atualizar`: Atualizar Tutor através de um `PATCH /tutor/{ID}/`, onde *ID* é o identificador do Tutor.
   - Apenas o próprio usuário Tutor pode atualizar seus dados.
   - É necessário estar autenticado.
 
