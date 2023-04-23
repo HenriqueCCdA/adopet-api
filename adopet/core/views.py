@@ -8,32 +8,17 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
 )
 from rest_framework.parsers import MultiPartParser
-from rest_framework.permissions import SAFE_METHODS, BasePermission, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from adopet.accounts.models import CustomUser as User
 from adopet.accounts.paginators import MyPagination
 from adopet.core.models import Adoption, Pet
+from adopet.core.permissions import (
+    OnlyShelterCanCreateDeleteUpdatePet,
+    ShelterOnlyCanDeleteUpdateOwnPets,
+)
 from adopet.core.serializers import AdoptionSerializer, PetSerializer
-
-# class DeleteUpdateOnlyPetBelongShelter(BasePermission):
-
-#     def has_object_permission(self, request, view, obj):
-#         if obj.shelter_id == request.user.pk:
-#             return True
-#         return False
-
-
-class OnlyShelterCanCreateDeleteUpdatePet(BasePermission):
-    """Only shelter can delete, update and create a pet"""
-
-    def has_permission(self, request, view):
-        if request.method in SAFE_METHODS:
-            return True
-
-        if request.user.role == User.Role.SHELTER:
-            return True
-        return False
 
 
 class PetLC(ListCreateAPIView):
@@ -47,7 +32,11 @@ class PetLC(ListCreateAPIView):
 class PetRDU(RetrieveUpdateDestroyAPIView):
     queryset = Pet.objects.filter(is_active=True)  # TODO cria o maneger para isso
     serializer_class = PetSerializer
-    permission_classes = [IsAuthenticated, OnlyShelterCanCreateDeleteUpdatePet]
+    permission_classes = [
+        IsAuthenticated,
+        OnlyShelterCanCreateDeleteUpdatePet,
+        ShelterOnlyCanDeleteUpdateOwnPets,
+    ]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
