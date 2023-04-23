@@ -13,6 +13,11 @@ def adoption(pet, tutor):
 
 
 @pytest.fixture
+def outher_adoption(pet_from_other_shelter, tutor):
+    return baker.make(Adoption, pet=pet_from_other_shelter, tutor=tutor)
+
+
+@pytest.fixture
 def create_pet_payload(shelter, pet_photo):
     return {
         "name": fake.name(),
