@@ -21,7 +21,7 @@ Desafio backend 6 da alura.
 
 [Postman](https://documenter.getpostman.com/view/18852890/2s93RRvsgF)
 
-A documentação da API (swagger) esta disponível na rota `/docs/`. Portanto localmente `http://localhost:8000/docs/`.
+A documentação da API (swagger) esta disponível na rota `/docs/`.
 
 ### Funcionalidades
 
