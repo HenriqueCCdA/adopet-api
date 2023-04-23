@@ -17,15 +17,15 @@ Desafio backend 6 da alura.
 ![Captura de tela de 2023-04-18 00-33-30](https://user-images.githubusercontent.com/37959973/232665132-9077c415-d738-4ea0-ad1c-f519740a962e.png?text=imagem_do_projeto#vitrinedev)
 
 
-## Documantação da API
+# 1) Documantação da API
 
 [Postman](https://documenter.getpostman.com/view/18852890/2s93RRvsgF)
 
 A documentação da API (swagger) esta disponível na rota `/docs/`.
 
-### Funcionalidades
+# 2) Funcionalidades
 
-#### Tutors
+## 2.1) Tutors
 
 - `Cadastrar`: Salvar tutor através de um `POST /tutor/`.
 
@@ -44,7 +44,7 @@ A documentação da API (swagger) esta disponível na rota `/docs/`.
   - É necessário estar autenticado.
   - O objeto não é deletado de verdade do banco de dados (`soft delete`)
 
-#### Shelter
+## 2.2) Shelter
 
 - `Cadastrar`: Salvar Shelter através de um `POST /shelter/`.
 
@@ -65,7 +65,7 @@ A documentação da API (swagger) esta disponível na rota `/docs/`.
   - O objeto não é deletado de verdade do banco de dados (`soft delete`)
   - Todos os `pets` associando as este abrigo também são deletados.
 
-#### Pet
+## 2.3) Pet
 - `Cadastrar`: Salvar Pet através de um `POST /pet/` com as informações.
   - Apenas Shelters podem cadastrar Pets.
 
@@ -83,7 +83,7 @@ A documentação da API (swagger) esta disponível na rota `/docs/`.
   - objeto não deletado de verdade do banco de dados (`soft delete`)
   <!-- - Pet relacionado a uma Adoption não pode ser deletado. -->
 
-#### Adoption
+## 2.4 Adoption
 - `Adotar`: Solicitar uma adoção de um Pet através de um `POST /adoption/`.
   - Apenas usuários do tipo tutor podem solicitar uma adoção.
   - É necessário estar autenticado
@@ -103,7 +103,7 @@ A documentação da API (swagger) esta disponível na rota `/docs/`.
   - Uma adoção só pode ser deletada pelo Shelter relacionado na adoção.
 
 
-## Variaveis de ambiente
+# 3) Variaveis de ambiente
 
 Foi usando o `python-decouple` portanto primeiro as variaveis são procuradas nas variaveis de ambiente. Se não forem achadas são lá elas são procuradas no arquivo `.env`.
 
@@ -117,7 +117,7 @@ DATABASE_URL=postgres://adopet_user:123456@localhost:5432/adopet_user
 DOC_API=True
 ```
 
-## Rodando o projeto via docker.
+# 4) Rodando o projeto via docker.
 
 Você precisa primeiro copiar o docker compose de desenvolvimento para a raiz do projeto
 
@@ -135,7 +135,7 @@ A aplicação ficará disponivel em `http://localhost:8000/`
 
 Todas as variaveis de ambiente usadas no conteiner são as definida no arquivo `.env` exceto o `DATABASE_URL` que é sobrescrito dentro do docker compose. Além disso foi utilizazndo `PYTHONBREAKPOINT=ipdb.set_trace` portanto é necessario usar o `pytest` com `-s` caso você queria usar `breakpoints`.
 
-### Outros comandos
+## 4.1) Outros comandos
 
 * rodando os testes : `make docker_pytest`
 * aplicando as migrações: `make docker_migrate`
