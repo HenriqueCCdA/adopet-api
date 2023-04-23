@@ -39,11 +39,11 @@ def test_negative_must_be_shelter(client_api_auth_user, create_pet_payload):
 
     resp = client_api_auth_user.post(url, data=create_pet_payload, format="multipart")
 
-    assert resp.status_code == status.HTTP_400_BAD_REQUEST
+    assert resp.status_code == status.HTTP_403_FORBIDDEN
 
     body = resp.json()
 
-    assert body == {"non_field_errors": ["O user precisa ser um abrigo."]}
+    assert body["detail"] == "Você não tem permissão para executar essa ação."
 
 
 @pytest.mark.parametrize(
@@ -55,14 +55,14 @@ def test_negative_must_be_shelter(client_api_auth_user, create_pet_payload):
         "behavior",
     ],
 )
-def test_negative_missing_fields(client_api_auth_user, field, create_pet_payload):
+def test_negative_missing_fields(client_api_auth_shelter, field, create_pet_payload):
     data = create_pet_payload.copy()
 
     del data[field]
 
     url = resolve_url(URL)
 
-    resp = client_api_auth_user.post(url, data=data)
+    resp = client_api_auth_shelter.post(url, data=data)
 
     assert resp.status_code == status.HTTP_400_BAD_REQUEST
 
@@ -82,14 +82,14 @@ def test_negative_missing_fields(client_api_auth_user, field, create_pet_payload
         ("behavior", "a" * 101, "Certifique-se de que este campo não tenha mais de 100 caracteres."),
     ],
 )
-def test_negative_validation_errors(client_api_auth_user, field, value, error, create_pet_payload):
+def test_negative_validation_errors(client_api_auth_shelter, field, value, error, create_pet_payload):
     data = create_pet_payload.copy()
 
     data[field] = value
 
     url = resolve_url(URL)
 
-    resp = client_api_auth_user.post(url, data=data)
+    resp = client_api_auth_shelter.post(url, data=data)
 
     assert resp.status_code == status.HTTP_400_BAD_REQUEST
 
