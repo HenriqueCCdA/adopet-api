@@ -120,7 +120,7 @@ def create_abrigo_payload():
 def client_api_auth_tutor(client_api, tutor):
     token = Token.objects.create(user=tutor)
 
-    header = {"HTTP_AUTHORIZATION": f"Token {token}"}
+    header = {"HTTP_AUTHORIZATION": f"Bearer {token}"}
 
     client_api.credentials(**header)
 
@@ -131,7 +131,7 @@ def client_api_auth_tutor(client_api, tutor):
 def client_api_auth_shelter(client_api, shelter):
     token = Token.objects.create(user=shelter)
 
-    header = {"HTTP_AUTHORIZATION": f"Token {token}"}
+    header = {"HTTP_AUTHORIZATION": f"Bearer {token}"}
 
     client_api.credentials(**header)
 
@@ -142,7 +142,7 @@ def client_api_auth_shelter(client_api, shelter):
 def client_api_auth_user(client_api, user):
     token = Token.objects.create(user=user)
 
-    header = {"HTTP_AUTHORIZATION": f"Token {token}"}
+    header = {"HTTP_AUTHORIZATION": f"Bearer {token}"}
 
     client_api.credentials(**header)
 
