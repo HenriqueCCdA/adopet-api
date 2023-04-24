@@ -91,12 +91,7 @@ A documentação da API (swagger) esta disponível na rota `/docs/`.
 
 - `Buscar todos`: Busca paginada de adoções através de um `GET /adoption/`.
   - É necessário estar autenticado.
-  <!-- - Busca somente adoções relacionadas ao usuário autenticado (Shelter ou Guardian). -->
-
-<!-- - `Atualizar status`: Atualização de status através de um ` /api/adoptions/{ID}/status` com a informação *status*
-  em um JSON no corpor da requisição. Os status possíveis são *ANALYSING*, *CONCLUDED* e *CANCELED*. Apenas usuários do tipo
-  Shelter atualizar status.
-  - Uma adoção só pode ter o status atualizado pelo Shelter relacionado na adoção.<br> -->
+   - Busca somente adoções relacionadas ao usuário autenticado (Shelter ou tutor).
 
 - `Deletar`: Deletar uma adoção através de um `DELETE /adoption/{ID}`, onde *{ID}* é o identificador da Adoção.
   - O objeto é deletado de verdade do banco de dados.(`hard delete`)

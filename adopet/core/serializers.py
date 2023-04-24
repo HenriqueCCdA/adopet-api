@@ -59,12 +59,19 @@ class AdoptionSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "pet",
+            # "pet_name",
             "tutor",
+            # "tutor_name",
             "date",
             "url",
             "created_at",
             "modified_at",
         )
+
+        # extra_kwargs = {
+        #     "pet_name": {"read_only": True},
+        #     "tutor_name": {"read_only": True},
+        # }
 
     def create(self, validate_data):
         with transaction.atomic():

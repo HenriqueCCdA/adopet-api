@@ -64,7 +64,7 @@ class AdoptionAdmin(admin.ModelAdmin):
     fieldsets = (
         (
             None,
-            {"fields": ("id",)},
+            {"fields": ("id", "shelter")},
         ),
         (
             _("Pet Info"),
@@ -86,6 +86,7 @@ class AdoptionAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "pet",
+        "shelter",
         "tutor",
         "date",
         "created_at",
@@ -98,6 +99,10 @@ class AdoptionAdmin(admin.ModelAdmin):
 
     readonly_fields = (
         "id",
+        "shelter",
         "created_at",
         "modified_at",
     )
+
+    def shelter(self, obj):
+        return obj.pet.shelter
