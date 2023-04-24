@@ -73,3 +73,9 @@ class Adoption(CreationModificationBase):
 
     def __str__(self):
         return f"{self.tutor.name}:{self.pet}"
+
+    # def pet_name(self):
+    #     return self.pet.name
+
+    # def tutor_name(self):
+    #     return self.tutor.name

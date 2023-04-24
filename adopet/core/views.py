@@ -2,7 +2,6 @@ from django.db import transaction
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import (
-    CreateAPIView,
     ListCreateAPIView,
     RetrieveDestroyAPIView,
     RetrieveUpdateDestroyAPIView,
@@ -11,6 +10,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from adopet.accounts.models import CustomUser as User
 from adopet.accounts.paginators import MyPagination
 from adopet.core.models import Adoption, Pet
 from adopet.core.permissions import (
@@ -53,13 +53,25 @@ class PetRDU(RetrieveUpdateDestroyAPIView):
         return Response({"detail": 'Method "PUT" not allowed.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-class AdoptionC(CreateAPIView):
+class AdoptionLC(ListCreateAPIView):
     queryset = Adoption.objects.all()
     serializer_class = AdoptionSerializer
     permission_classes = [
         IsAuthenticated,
         OnlyTutorCanCreateAdoption,
     ]
+
+    def get_queryset(self):
+        user = self.request.user
+
+        qs = super().get_queryset()
+
+        if user.role == User.Role.TUTOR:
+            qs = qs.filter(tutor=user)
+        elif user.role == User.Role.SHELTER:
+            qs = qs.filter(pet__shelter=user)
+
+        return qs
 
 
 class AdoptionRD(RetrieveDestroyAPIView):
@@ -87,5 +99,5 @@ class AdoptionRD(RetrieveDestroyAPIView):
 
 rdu_pet = PetRDU.as_view()
 lc_pet = PetLC.as_view()
-c_adoption = AdoptionC.as_view()
+lc_adoption = AdoptionLC.as_view()
 rd_adoption = AdoptionRD.as_view()

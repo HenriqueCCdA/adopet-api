@@ -69,6 +69,11 @@ def tutor():
 
 
 @pytest.fixture
+def other_tutor(tutor):
+    return baker.make(User, role=User.Role.TUTOR, is_active=True)
+
+
+@pytest.fixture
 def pet(shelter, pet_photo):
     return baker.make(Pet, shelter=shelter, photo=pet_photo)
 
@@ -111,16 +116,6 @@ def create_abrigo_payload():
     }
 
 
-# @pytest.fixture
-# def tutor():
-#     return User.objects.create_user(
-#         name=fake.name(),
-#         email=fake.email(),
-#         password=fake.password(),
-#         role=User.Role.TUTOR,
-#     )
-
-
 @pytest.fixture
 def client_api_auth_tutor(client_api, tutor):
     token = Token.objects.create(user=tutor)
@@ -130,16 +125,6 @@ def client_api_auth_tutor(client_api, tutor):
     client_api.credentials(**header)
 
     return client_api
-
-
-# @pytest.fixture
-# def shelter():
-#     return User.objects.create_user(
-#         name=fake.name(),
-#         email=fake.email(),
-#         password=fake.password(),
-#         role=User.Role.SHELTER,
-#     )
 
 
 @pytest.fixture

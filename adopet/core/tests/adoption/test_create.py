@@ -7,7 +7,7 @@ from adopet.core.models import Adoption
 pytestmark = pytest.mark.django_db
 
 
-URL = "core:create-adoption"
+URL = "core:list-create-adoption"
 
 
 def test_positive(client_api_auth_tutor, create_adoption_payload):
