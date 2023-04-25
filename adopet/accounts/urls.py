@@ -1,5 +1,4 @@
 from django.urls import path
-from rest_framework.authtoken.views import obtain_auth_token
 
 from . import views
 
@@ -14,7 +13,7 @@ urlpatterns = [
     path("abrigos/", views.shelter_list_create, name="list-create-shelter"),
     path("abrigos/<int:pk>/", views.shelter_read_delete_update, name="read-delete-update-shelter"),
     #
-    path("login/", obtain_auth_token, name="login"),
+    path("login/", views.custom_obtain_authtoken, name="login"),
     #
     path("whoami/", views.whoami, name="whoami"),
 ]

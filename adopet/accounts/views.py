@@ -2,7 +2,9 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
+from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -47,6 +49,14 @@ class Version(APIView):
         serialize = VersionSerializer(instance={"version": 1.0})
 
         return Response(serialize.data)
+
+
+class CustomObtainAuthToken(ObtainAuthToken):
+    """
+    SPEC **OAuth2**: `username` and `password` send in "form data like".
+    """
+
+    parser_classes = [FormParser, MultiPartParser]
 
 
 class TutorLC(ListCreateAPIView):
@@ -129,3 +139,5 @@ shelter_read_delete_update = ShelterRDU.as_view()
 
 version = Version.as_view()
 whoami = Whoami.as_view()
+
+custom_obtain_authtoken = CustomObtainAuthToken.as_view()

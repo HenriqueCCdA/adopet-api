@@ -28,7 +28,7 @@ def user_to_login(login_payload):
 def test_positive(client_api, user_to_login, login_payload):
     url = resolve_url(URL)
 
-    resp = client_api.post(url, data=login_payload)
+    resp = client_api.post(url, data=login_payload, format="multipart")
     assert resp.status_code == status.HTTP_200_OK
 
     body = resp.json()
