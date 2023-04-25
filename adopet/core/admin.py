@@ -46,7 +46,7 @@ class PetAdmin(admin.ModelAdmin):
         "modified_at",
     )
 
-    list_filter = ("is_active",)
+    list_filter = ("is_active", "size", "is_adopted")
 
     readonly_fields = (
         "id",
@@ -55,8 +55,18 @@ class PetAdmin(admin.ModelAdmin):
         "photo_tag",
     )
 
-    search_fields = ("name", "email")
+    search_fields = ("name", "shelter")
     ordering = ("name",)
+
+    actions = ("make_active", "make_disable")
+
+    @admin.action(description="Mark selected entries as active")
+    def make_active(self, request, queryset):
+        queryset.update(is_active=True)
+
+    @admin.action(description="Mark selected entries as disable")
+    def make_disable(self, request, queryset):
+        queryset.update(is_active=False)
 
 
 @admin.register(Adoption)
