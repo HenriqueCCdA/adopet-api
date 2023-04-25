@@ -12,7 +12,7 @@ URL = "accounts:read-delete-update-tutor"
 
 
 def test_positive_by_id(client_api_auth_tutor, tutor):
-    """Sotf delete: return 200 and a msg."""
+    """Sotf delete: return 200 and a detail."""
 
     pk = tutor.pk
 
@@ -26,7 +26,7 @@ def test_positive_by_id(client_api_auth_tutor, tutor):
 
     body = resp.json()
 
-    assert body["msg"] == "Tutor deletado com sucesso."
+    assert body["detail"] == "Tutor deletado com sucesso."
     assert not tutor.is_active
 
 

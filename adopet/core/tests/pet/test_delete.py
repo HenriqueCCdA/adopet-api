@@ -20,7 +20,7 @@ def test_positive(client_api_auth_shelter, pet):
     pet.refresh_from_db()
     body = resp.json()
 
-    assert body["msg"] == "Pet deletado com sucesso."
+    assert body["detail"] == "Pet deletado com sucesso."
     assert not pet.is_active
 
 

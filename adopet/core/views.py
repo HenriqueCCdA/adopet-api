@@ -41,7 +41,7 @@ class PetRDU(RetrieveUpdateDestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         self.perform_destroy(instance)
-        return Response(data={"msg": "Pet deletado com sucesso."}, status=status.HTTP_200_OK)
+        return Response(data={"detail": "Pet deletado com sucesso."}, status=status.HTTP_200_OK)
 
     def perform_destroy(self, instance):
         """Soft delete"""
@@ -87,7 +87,7 @@ class AdoptionRD(RetrieveDestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         self.perform_destroy(instance)
-        return Response(data={"msg": "Adoção deletada com sucesso."}, status=status.HTTP_200_OK)
+        return Response(data={"detail": "Adoção deletada com sucesso."}, status=status.HTTP_200_OK)
 
     def perform_destroy(self, instance):
         """Hard delete and set pet.is_adopted to False"""

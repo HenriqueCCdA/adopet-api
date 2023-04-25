@@ -12,7 +12,7 @@ URL = "accounts:read-delete-update-shelter"
 
 
 def test_positive_by_id(client_api_auth_shelter, shelter):
-    """Sotf delete: return 200 and a msg."""
+    """Sotf delete: return 200 and a detail."""
 
     pk = shelter.pk
 
@@ -26,7 +26,7 @@ def test_positive_by_id(client_api_auth_shelter, shelter):
 
     body = resp.json()
 
-    assert body["msg"] == "Abrigo deletado com sucesso."
+    assert body["detail"] == "Abrigo deletado com sucesso."
     assert not shelter.is_active
 
 
@@ -46,7 +46,7 @@ def test_positive_must_disable_the_pets_also(client_api_auth_shelter, shelter, p
 
     body = resp.json()
 
-    assert body["msg"] == "Abrigo deletado com sucesso."
+    assert body["detail"] == "Abrigo deletado com sucesso."
     assert not shelter.is_active
     for p in db_pets:
         assert not p.is_active

@@ -64,7 +64,7 @@ class TutorLC(ListCreateAPIView):
 class TutorRDU(RetrieveUpdateDestroyAPIView):
     """**Read**, **Delete** and **Update** a Tutor need to be auth."""
 
-    DELETE_MSG = {"msg": "Tutor deletado com sucesso."}
+    DELETE_detail = {"detail": "Tutor deletado com sucesso."}
 
     queryset = User.objects.tutor()
     serializer_class = TutorSerializer
@@ -73,7 +73,7 @@ class TutorRDU(RetrieveUpdateDestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         self.perform_destroy(instance)
-        return Response(data={"msg": "Tutor deletado com sucesso."}, status=status.HTTP_200_OK)
+        return Response(data={"detail": "Tutor deletado com sucesso."}, status=status.HTTP_200_OK)
 
     def perform_destroy(self, instance):
         """Soft delete"""
@@ -107,7 +107,7 @@ class ShelterRDU(RetrieveUpdateDestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         self.perform_destroy(instance)
-        return Response(data={"msg": "Abrigo deletado com sucesso."}, status=status.HTTP_200_OK)
+        return Response(data={"detail": "Abrigo deletado com sucesso."}, status=status.HTTP_200_OK)
 
     def perform_destroy(self, instance):
         """Soft delete"""
