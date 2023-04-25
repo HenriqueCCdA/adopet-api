@@ -21,7 +21,7 @@ def test_positive(client_api_auth_shelter, adoption):
     assert resp.status_code == status.HTTP_200_OK
     body = resp.json()
 
-    assert body["msg"] == "Adoção deletada com sucesso."
+    assert body["detail"] == "Adoção deletada com sucesso."
     assert not Adoption.objects.exists()
     assert not pet.is_adopted
 
