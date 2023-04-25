@@ -79,5 +79,15 @@ class UserAdmin(UserAdmin):
     search_fields = ("name", "email")
     ordering = ("email",)
 
+    actions = ("make_active", "make_disable")
+
+    @admin.action(description="Mark selected entries as active")
+    def make_active(self, request, queryset):
+        queryset.filter(is_staff=False).update(is_active=True)
+
+    @admin.action(description="Mark selected entries as disable")
+    def make_disable(self, request, queryset):
+        queryset.filter(is_staff=False).update(is_active=False)
+
 
 admin.site.register(User, UserAdmin)
