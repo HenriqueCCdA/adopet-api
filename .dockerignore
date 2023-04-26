@@ -10,6 +10,8 @@
 .pytest_cache
 .python-version
 .vscode
+.ipython
+.cache
 Makefile
 README.md
 docker
@@ -17,3 +19,5 @@ docker-compose.yml
 requirements-dev.in
 requirements.in
 test-result.xml
+frontend
+media
