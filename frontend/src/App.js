@@ -1,16 +1,16 @@
-import MyRoutes from "./routes";
+// dependencies
+import { BrowserRouter as Router } from "react-router-dom";
+
+// components
+import AnimatedRoutes from "./Components/AnimatedRoutes.js";
 
 function App() {
   return (
-    <div className="App">
-      <header>
-        <h1>Adopet</h1>
-      </header>
-      <MyRoutes />
-      <footer>
-        <h1>Rodape</h1>
-      </footer>
-    </div>
+    <Router>
+      <main className='App'>
+        <AnimatedRoutes />
+      </main>
+    </Router>
   );
 }
 
