@@ -3,7 +3,13 @@ import MyRoutes from "./routes";
 function App() {
   return (
     <div className="App">
-        <MyRoutes />
+      <header>
+        <h1>Adopet</h1>
+      </header>
+      <MyRoutes />
+      <footer>
+        <h1>Rodape</h1>
+      </footer>
     </div>
   );
 }

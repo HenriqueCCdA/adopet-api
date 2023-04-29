@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import clientHttp from "../../http";
 
 const LoginForm = () => {
 
@@ -18,7 +18,7 @@ const LoginForm = () => {
     event.preventDefault();
     const data =  `username=${username}&password=${password}`
     try{
-      const resp = await axios.post("http://localhost:8000/login/", data)
+      const resp = await clientHttp.post("login/", data)
       localStorage.setItem('adopet-token', resp.data.token);
     }catch(error){
       console.log(error)
