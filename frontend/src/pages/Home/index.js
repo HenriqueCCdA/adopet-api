@@ -1,7 +1,17 @@
+import { Link } from "react-router-dom"
+
+
 function Home() {
 
   return (
-    <h1>Adopet</h1>
+    <>
+      <p>
+        <Link  to="/login">login</Link>
+      </p>
+      <p>
+        <Link  to="/pets-list">Pets</Link>
+      </p>
+    </>
   )
 }
 
