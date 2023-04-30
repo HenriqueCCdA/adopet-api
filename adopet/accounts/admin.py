@@ -22,7 +22,14 @@ class UserAdmin(UserAdmin):
         ),
         (
             _("Personal info"),
-            {"fields": ("name",)},
+            {
+                "fields": (
+                    "name",
+                    "city",
+                    "phone",
+                    "about",
+                )
+            },
         ),
         (
             _("User type"),

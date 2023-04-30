@@ -18,20 +18,23 @@ def test_positive(client_api, create_abrigo_payload):
 
     assert resp.status_code == status.HTTP_201_CREATED
 
-    tutor = User.objects.first()
+    shelter = User.objects.first()
     body = resp.json()
 
-    assert body["id"] == tutor.id
-    assert body["name"] == tutor.name
-    assert body["email"] == tutor.email
+    assert body["id"] == shelter.id
+    assert body["name"] == shelter.name
+    assert body["email"] == shelter.email
+    assert body["city"] == shelter.city
+    assert body["phone"] == shelter.phone
+    assert body["about"] == shelter.about
     assert body["role"] == "S"
     assert body["is_active"]
-    assert body["created_at"] == str(tutor.created_at.astimezone().isoformat())
-    assert body["modified_at"] == str(tutor.modified_at.astimezone().isoformat())
+    assert body["created_at"] == str(shelter.created_at.astimezone().isoformat())
+    assert body["modified_at"] == str(shelter.modified_at.astimezone().isoformat())
 
-    assert resp["Location"] == f"http://testserver/abrigos/{tutor.id}/"
+    assert resp["Location"] == f"http://testserver/abrigos/{shelter.id}/"
 
-    assert tutor.check_password(create_abrigo_payload["password"])
+    assert shelter.check_password(create_abrigo_payload["password"])
 
 
 def test_negative_email_must_be_unique(client_api, create_abrigo_payload):
