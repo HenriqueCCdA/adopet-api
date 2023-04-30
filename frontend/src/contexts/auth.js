@@ -31,12 +31,10 @@ export const AuthProvider = ({ children }) => {
         try{
           const resp = await clientHttp.post("login/", data)
           const token = resp.data.token
-          localStorage.setItem('adopet-token', resp.data.token);
-        // creating a session api
-          const loggedUser = {
-            token,
-            email
-          };
+          const id = resp.data.id
+
+          // creating a session api
+          const loggedUser = { token, id, email};
 
         // saving user on localStorage
           localStorage.setItem('adopet-user', JSON.stringify(loggedUser));

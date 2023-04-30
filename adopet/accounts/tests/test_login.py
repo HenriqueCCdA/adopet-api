@@ -36,6 +36,7 @@ def test_positive(client_api, user_to_login, login_payload):
     user = User.objects.first()
 
     assert body["token"] == user.auth_token.key
+    assert body["id"] == user.pk
 
 
 def test_negative_inative_user_cannot_login(client_api, user_to_login, login_payload):
