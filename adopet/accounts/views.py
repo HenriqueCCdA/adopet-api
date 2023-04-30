@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
+from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.parsers import FormParser, MultiPartParser
@@ -58,11 +59,18 @@ class CustomObtainAuthToken(ObtainAuthToken):
 
     parser_classes = [FormParser, MultiPartParser]
 
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data["user"]
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({"token": token.key, "id": user.pk})
+
 
 class TutorLC(ListCreateAPIView):
     """
-    - **POST**: Register new tutor not need to be auth
-    - **GET**: List tutors need to be auth
+    - `POST`: Register new tutor not need to be auth
+    - `GET`: List tutors need to be auth
     """
 
     queryset = User.objects.tutor()
@@ -72,7 +80,11 @@ class TutorLC(ListCreateAPIView):
 
 
 class TutorRDU(RetrieveUpdateDestroyAPIView):
-    """**Read**, **Delete** and **Update** a Tutor need to be auth."""
+    """
+    - `Read`: Need to be auth.
+    - `Delete`: It needs to be auth and the tutor itself.
+    - `Update`: It needs to be auth and the tutor itself.
+    """
 
     DELETE_detail = {"detail": "Tutor deletado com sucesso."}
 

@@ -26,7 +26,6 @@ const Home = () => {
 
   useEffect( () => { pets_list()} , []);
 
-
   return (
     <motion.section
       className='home'
