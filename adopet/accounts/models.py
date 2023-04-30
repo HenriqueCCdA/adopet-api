@@ -33,6 +33,10 @@ class CustomUser(CreationModificationBase, AbstractBaseUser, PermissionsMixin):
 
     role = models.CharField("Cargos", max_length=1, choices=Role.choices, null=True, blank=True)
 
+    city = models.CharField("Cidade", max_length=30, null=True, blank=True)
+    phone = models.CharField("Telefone", max_length=30, null=True, blank=True)  # TODO: Validar
+    about = models.TextField("Sobre", null=True, blank=True)
+
     objects = UserManager()
 
     EMAIL_FIELD = "email"

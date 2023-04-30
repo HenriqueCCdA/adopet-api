@@ -34,6 +34,9 @@ def test_positive_list(client_api_auth_shelter, users):
         assert r["id"] == db.id
         assert r["name"] == db.name
         assert r["email"] == db.email
+        assert r["city"] == db.city
+        assert r["phone"] == db.phone
+        assert r["about"] == db.about
         assert r["role"] == "S"
         assert r["is_active"]
         assert r["url"] == f"http://testserver/abrigos/{db.pk}/"

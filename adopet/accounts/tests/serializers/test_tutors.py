@@ -28,6 +28,9 @@ def test_positive_serialization_objs_list(users):
         assert data["id"] == db.id
         assert data["name"] == db.name
         assert data["email"] == db.email
+        assert data["city"] == db.city
+        assert data["phone"] == db.phone
+        assert data["about"] == db.about
         assert "password" not in data
         assert "password2" not in data
         assert data["is_active"] == db.is_active
@@ -47,6 +50,9 @@ def test_positive_serialization_one_obj(users):
     assert data["id"] == tutor.id
     assert data["name"] == tutor.name
     assert data["email"] == tutor.email
+    assert data["city"] == tutor.city
+    assert data["phone"] == tutor.phone
+    assert data["about"] == tutor.about
     assert "password" not in data
     assert "password2" not in data
     assert data["is_active"] == tutor.is_active

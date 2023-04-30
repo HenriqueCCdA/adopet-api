@@ -28,6 +28,9 @@ def test_positive_get_by_id(client_api_auth_shelter, users):
     assert body["id"] == shelter.id
     assert body["name"] == shelter.name
     assert body["email"] == shelter.email
+    assert body["city"] == shelter.city
+    assert body["phone"] == shelter.phone
+    assert body["about"] == shelter.about
     assert body["role"] == "S"
     assert body["is_active"]
     assert body["created_at"] == str(shelter.created_at.astimezone().isoformat())

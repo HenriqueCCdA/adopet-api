@@ -8,13 +8,15 @@ import clientHttp from '../adapters/axios_client';
 import { useEffect, useState } from 'react';
 
 const Perfil = () => {
-  // destructuring useForm
   const { register, handleSubmit, formState: { errors } } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onChange'
   });
 
   const [name, setName] = useState('');
+  const [city, setCity] = useState('');
+  const [phone, setPhone] = useState('');
+  const [about, setAbout] = useState('');
 
   const get_tutor = async () => {
       const user = localStorage.getItem("adopet-user");
@@ -24,6 +26,9 @@ const Perfil = () => {
         const config = {headers: {"Authorization": `Bearer ${token}`}}
         const resp = await clientHttp.get(`tutores/${id}/`, config)
         setName(resp.data.name)
+        setCity(resp.data.city)
+        setPhone(resp.data.phone)
+        setAbout(resp.data.about)
       }catch(error){
         console.log(error)
       }
@@ -37,10 +42,9 @@ const Perfil = () => {
     try{
       const {id, token} = JSON.parse(user)
       const config = {headers: {"Authorization": `Bearer ${token}`}}
-      const userDate = {"name": data.name}
+      const userDate = {"name": name, "city": city, "about": about, "phone": phone}
       const resp = await clientHttp.patch(`tutores/${id}/`, userDate, config)
-      console.log(resp.data)
-      setName(resp.data.name)
+      console.log("update", data.about, data.name, resp.data)
     }catch(error){
       console.log(error)
     }
@@ -64,9 +68,14 @@ const Perfil = () => {
         <input
           id='name'
           type="text"
-          {...register("name", { required: 'É necessário informar seu nome', maxLength: { value: 40, message: 'O número máximo de caracteres é 40' } })}
+          // # TODO: Usar useForm da forma correta
+          // {
+          //   ...register("name", {
+          //     required: 'É necessário informar seu nome',
+          //     maxLength: { value: 40, message: 'O número máximo de caracteres é 40' }
+          // })}
           placeholder='Insira seu nome completo'
-          value={name}
+          value={name || ''}
           onChange={e => setName(e.target.value)}
         />
         {errors.name && <p className="error">{errors.name.message}</p>}
@@ -75,18 +84,25 @@ const Perfil = () => {
         <input
           type="tel"
           id='phone'
-          {...register('phone', { required: 'Informe um número de telefone', pattern: /\(?[1-9]{2}\)?\s?9?[0-9]{8}/ })}
+          // {
+          //   ...register('phone', {
+          //     required: 'Informe um número de telefone',
+          //     pattern: /\(?[1-9]{2}\)?\s?9?[0-9]{8}/
+          // })}
           placeholder='Insira seu telefone e/ou whatsapp'
-          // value='98 123456789'
+          value={phone || '' }
+          onChange={e => setPhone(e.target.value)}
         />
         {errors.phone && <p className="error">{errors.phone.message || 'Por favor, verifique o número digitado'}</p>}
 
         <label htmlFor="city">Cidade</label>
         <input
           type="text"
-          id='city' {...register('city', { required: 'Informe a cidade em que você mora' })}
+          id='city'
+          // {...register('city', { required: 'Informe a cidade em que você mora' })}
           placeholder='Informe a cidade em que você mora'
-          // value='São Luís'
+          value={city || '' }
+          onChange={e => setCity(e.target.value)}
         />
 
         <label htmlFor="about">Sobre</label>
@@ -97,7 +113,8 @@ const Perfil = () => {
           cols="30"
           rows="8"
           placeholder='Escreva sobre você.'
-          // value='At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati.'
+          value={about || ''}
+          onChange={e => setAbout(e.target.value)}
         />
         <Button type='submit' children='Salvar' />
       </form>

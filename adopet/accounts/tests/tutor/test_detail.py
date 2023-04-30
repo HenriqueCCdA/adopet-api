@@ -28,6 +28,9 @@ def test_positive_get_by_id(client_api_auth_tutor, users):
     assert body["id"] == tutor.id
     assert body["name"] == tutor.name
     assert body["email"] == tutor.email
+    assert body["city"] == tutor.city
+    assert body["phone"] == tutor.phone
+    assert body["about"] == tutor.about
     assert body["role"] == "T"
     assert body["is_active"]
     assert body["created_at"] == str(tutor.created_at.astimezone().isoformat())
